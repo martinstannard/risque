@@ -5,8 +5,10 @@ class Region < ActiveRecord::Base
 
   after_create :generate_countries
 
-  def generate_countries
-    (rand(6)+4).times do |t|
+  def generate_countries(options = {})
+    options[:min] ||= 4
+    options[:max] ||= 10
+    (rand(options[:max] - options[:min]) + options[:max]).times do |t|
       puts "generating country #{t}" 
       countries << Country.create(:name => "country_#{t}")
     end
@@ -18,8 +20,13 @@ class Region < ActiveRecord::Base
     countries[rand(countries.size)]
   end
 
+  def rand_other_country(country)
+    (countries - [country])[rand(countries.size - 1)]
+  end
+
   def border
-    Neighbour.create(:country_id => rand_country.id, :neighbour_id => rand_country.id)
+    country = rand_country
+    Neighbour.create(:country_id => country.id, :neighbour_id => self.rand_other_country(country).id)
   end
 
   def create_borders
