@@ -2,12 +2,12 @@ class World < ActiveRecord::Base
 
   has_many :regions
 
-  after_save :generate_regions
+  after_create :generate_regions
 
   def generate_regions
-    puts "generate regions"
-    7.times do
-      regions << Region.create
+    7.times do |t|
+      puts "generation region #{t}"
+      regions << Region.create(:name => "region_#{t}")
     end
   end
 
