@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  country_id: 1
+  neighbour_id: 1
+
+two:
+  country_id: 1
+  neighbour_id: 1
