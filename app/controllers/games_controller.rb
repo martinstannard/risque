@@ -37,11 +37,14 @@ class GamesController < ApplicationController
   end
 
   def attack
-    @game_player_attacking_country = GamePlayerCountry.find(:first, :conditions =>["game_player_id = ? and country_id = ? and armies > 1",params[:game_player_id],params[:attacker_country_id]])
+    @game_player_attacking_country = GamePlayerCountry.find(:first, :conditions =>["country_id = ?",params[:attacker_country_id]])
     @game_player_target_country = GamePlayerCountry.find(:first, :conditions =>["country_id = ?",params[:target_country_id]])
     @armies = params[:armies].to_i
     
-    @game_player_attacking_country.attack(@game_player_target_country,@armies)
+    @game_player_attacking_country.country.attack(@game_player_target_country.country,@armies)
+    @game = @game_player_attacking_country.game_player.game
+    @game_player = @game.get_game_player
+    @game.world.graph
     render :partial => "attack", :layout => false
   end
 
@@ -58,6 +61,7 @@ class GamesController < ApplicationController
       @game_player = @game.game_players.find(:first,:order => "id ASC")
       @game.is_allocation_round = 0
       @game.save!
+      @game.world.graph
       render :partial => "attack", :layout => false
     else
       render :partial => "allocate", :layout => false
