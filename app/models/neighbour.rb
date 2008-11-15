@@ -32,4 +32,8 @@ class Neighbour < ActiveRecord::Base
     exists?(['country_id = ? AND neighbour_id = ?', country_id, neighbour_id])
   end
 
+  def is_regional?
+    Country.find(country_id).region == Country.find(neighbour_id).region
+  end
+
 end

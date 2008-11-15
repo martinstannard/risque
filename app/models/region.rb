@@ -32,11 +32,22 @@ class Region < ActiveRecord::Base
   def create_borders
     countries.each do |c|
       other_countries = countries.dup - [c]
-      border_count = rand(2) + 1
+      border_count = rand(3) + 1
       border_count.times do
         border
       end
     end
   end
 
+  def borders
+    countries.collect { |c| c.neighbours }.flatten
+  end
+  
+  def internal_borders
+    borders.select { |n| n.is_regional? }
+  end
+
+  def external_borders
+    borders.select { |n| !n.is_regional? }
+  end
 end
