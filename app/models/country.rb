@@ -16,7 +16,7 @@ class Country < ActiveRecord::Base
     results.each do |r|
       r ?  target.game_player_country.add_armies(-1) : game_player_country.add_armies(-1)
     end
-    attackers_left = attacker_dice.find_all { |r| r.true? }.size
+    attackers_left = results.find_all { |r| r.true? }.size
     if takeover(target, attackers_left)
       return "You defeated the enemy. You have overrun their territory."
     else
