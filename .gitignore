@@ -2,3 +2,4 @@ log
 *.sw*
 *.dot
 config/database.yml
+config/database.*
