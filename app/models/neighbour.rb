@@ -20,7 +20,7 @@ class Neighbour < ActiveRecord::Base
     File.open("#{file_prefix}.dot", 'w') do |f|
       f << text.uniq.join("\n")
     end
-    #`dot -Tpng -Gsize=6,6 -o#{file_prefix}.png "#{file_prefix}.dot"`
+    `dot -Tpng -Gsize=6,6 -o#{file_prefix}.png "#{file_prefix}.dot"`
   end
 
   def self.create_borders(country_id, neighbour_id)

@@ -12,37 +12,37 @@
 ActiveRecord::Schema.define(:version => 20081115003311) do
 
   create_table "countries", :force => true do |t|
-    t.integer  "region_id"
+    t.integer  "region_id",  :limit => 11
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "game_player_countries", :force => true do |t|
-    t.integer  "game_player_id"
-    t.integer  "country_id"
-    t.integer  "armies",         :default => 0
+    t.integer  "game_player_id", :limit => 11
+    t.integer  "country_id",     :limit => 11
+    t.integer  "armies",         :limit => 11, :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "game_players", :force => true do |t|
-    t.integer  "game_id"
-    t.integer  "player_id"
-    t.integer  "armies_to_allocate", :default => 0
+    t.integer  "game_id",            :limit => 11
+    t.integer  "player_id",          :limit => 11
+    t.integer  "armies_to_allocate", :limit => 11, :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "games", :force => true do |t|
-    t.integer  "current_player"
+    t.integer  "current_player", :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "neighbours", :force => true do |t|
-    t.integer  "country_id"
-    t.integer  "neighbour_id"
+    t.integer  "country_id",   :limit => 11
+    t.integer  "neighbour_id", :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -54,12 +54,12 @@ ActiveRecord::Schema.define(:version => 20081115003311) do
   end
 
   create_table "regions", :force => true do |t|
-    t.integer  "world_id"
+    t.integer  "world_id",   :limit => 11
     t.string   "name"
-    t.integer  "bonus"
+    t.integer  "bonus",      :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "colour",     :default => ""
+    t.string   "colour",                   :default => ""
   end
 
   create_table "worlds", :force => true do |t|
