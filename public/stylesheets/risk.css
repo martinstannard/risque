@@ -1,0 +1,49 @@
+body {
+	margin: 0;
+	background-color: #fff;
+	color: #333;
+	font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", Verdana, sans-serif;
+	}
+.container {
+	background-color: #f0f0e8;
+	padding: .5em 0px 6em 10px; 
+	position: relative;
+	}
+a { 
+	color: #bf0000; text-decoration: none; outline: none;
+	}
+a:focus, a:hover {
+	color: #f00; text-decoration: underline;
+	}
+
+h1 {
+	background-color: #600;
+	padding: .5em 1em .5em 1em;
+	color: #fff;
+}
+
+div#game-console {
+	padding: .5em 1em .5em 1em;
+	background-color: #ddd;
+}
+
+	div#game-console p {
+		font-weight: bold;
+	}
+
+	div#game-console ol {
+		list-style: none;
+	}
+	
+	div#game-console li {
+		display: inline;
+		margin-right: 25px;
+	}
+	
+div#map {
+	width: 100%;
+}
+
+	div#map img {
+		margin: 25px auto;
+	}

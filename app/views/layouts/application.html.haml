@@ -8,9 +8,11 @@
     = javascript_include_tag 'risk'
     %script
       = "var global_token = '" + form_authenticity_token + "';"
+    = stylesheet_link_tag 'reset', 'risk'
     
   %body
-    %h1 Risque!
+    %div#container
+      %h1 Clever name here
     
-    = yield :layout
+      = yield :layout
   
