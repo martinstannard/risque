@@ -27,5 +27,5 @@ class Game < ActiveRecord::Base
       gp.save
     end
   end
-  
+    
 end
