@@ -23,7 +23,7 @@ class World < ActiveRecord::Base
       text << "subgraph #{region.label}{\n"
       region.internal_borders.each do |n|
         c = n.country
-        text << "#{c.label} -> country_#{n.neighbour.id};\n"
+        text << "#{c.label} -> #{n.neighbour.label};\n"
         text << "#{c.label} [shape=rectangle,color=#{c.region.colour},style=filled];\n"
       end
       text << "label=\"#{region.label}a\";\n" 
@@ -31,7 +31,7 @@ class World < ActiveRecord::Base
       text << "}\n"
       region.external_borders.each do |n|
         c = n.country
-        text << "#{c.label} -> country_#{n.neighbour.id};\n"
+        text << "#{c.label} -> #{n.neighbour.label};\n"
         text << "#{c.label} [shape=rectangle,color=#{c.region.colour},style=filled];\n"
       end
     end
