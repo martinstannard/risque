@@ -5,3 +5,4 @@ config/database.yml
 config/database.*
 db/schema.rb
 *.svg
+*.png
