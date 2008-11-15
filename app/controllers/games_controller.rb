@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
   def new
-    
+    @game = Game.new
   end
 
   def show
@@ -9,7 +9,7 @@ class GamesController < ApplicationController
   def create
     g = Game.new
     g.world = World.begat
-    g.save
+    g.save!
     g.players << Player.find(:all,:limit => 4)
     redirect_to game_path(g)
     return false 
