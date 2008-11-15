@@ -1,0 +1,20 @@
+%div#game-console
+  %p You have 34 armies to allocate
+  %form
+    %fieldset
+      %label
+        %span 
+          Your countries
+          %p
+            %select
+              %option Foo
+              %option Bar
+      %label
+        %span
+          Available armies
+          %p
+            %select
+              %option 1
+              %option 2
+    %fieldset
+      = submit_tag 'Add', :class => "submit"
