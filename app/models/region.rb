@@ -14,7 +14,7 @@ class Region < ActiveRecord::Base
     options[:max] ||= 10
     (rand(options[:max] - options[:min]) + options[:min]).times do |t|
       puts "generating country #{t}" 
-      countries << Country.create(:name => "country_#{t}")
+      countries << Country.create(:name => "country_r#{self.id}_c#{t}")
     end
     create_borders
     update_attribute(:bonus, countries.size - 2)
