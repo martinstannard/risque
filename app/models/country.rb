@@ -2,7 +2,6 @@ class Country < ActiveRecord::Base
   
   belongs_to :region
   has_many :neighbours, :dependent => :destroy
-  has_many :game_players, :through => :game_player_countries
 
   def label
     "country_#{id}"
