@@ -6,22 +6,19 @@
     armies to allocate
   %form
     %fieldset
-      %label
-        %span 
-          Your countries
-          %p
-            %select{:id => "country_id"}
-              - @game_player.countries.each do |c|
-                %option{:value => c.id}
-                  = c.name
-      %label
-        %span
-          Available armies
-          %p
-            %select{:id => "armies"}
-              - @game_player.armies_to_allocate.times do |t|
-                %option
-                  = t+1
-              
-    %fieldset
-      %input{:type=> "button", :onclick => "allocate_armies(#{@game_player.game_id},#{@game_player.id})",:value => "allocate"}
+      %ol
+        %li
+          %label Your countries
+          %select{:id => "country_id"}
+            - @game_player.countries.each do |c|
+              %option{:value => c.id}
+                = c.name
+        %li
+          %label Available armies
+          %select{:id => "armies"}
+            - @game_player.armies_to_allocate.times do |t|
+              %option
+                = t+1
+          
+        %li
+          %input{:type=> "button", :onclick => "allocate_armies(#{@game_player.game_id},#{@game_player.id})",:value => "allocate"}

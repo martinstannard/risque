@@ -34,6 +34,7 @@ class Game < ActiveRecord::Base
       self.save
     end
     if self.current_player.nil?
+      self.is_allocation_round = 0
       self.game_players.find(:first,:order => "id ASC")
     else
       self.current_player
