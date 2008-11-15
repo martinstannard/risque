@@ -9,4 +9,8 @@ class GamePlayer < ActiveRecord::Base
     update_attribute(:armies_to_allocate, armies_to_allocate + armies)
   end
 
+  def armed_countries
+    self.game_player_countries.find(:all, :conditions => "armies > 1").map{|c| c.country}
+  end
+
 end

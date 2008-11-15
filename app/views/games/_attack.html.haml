@@ -9,7 +9,8 @@
           Attack from
           %p
             %select{:id => "attacker_country_id", :onchange => "get_neighbours(#{@game_player.id}, #{@game_player.game_id})"}
-              - @game_player.countries.each do |c|
+              %option Please choose
+              - @game_player.armed_countries.each do |c|
                 %option{:value => c.id}
                   = c.name
       %div#attack_target

@@ -37,7 +37,7 @@ class GamesController < ApplicationController
   end
 
   def attack
-    @game_player_attacking_country = GamePlayerCountry.find(:first, :conditions =>["game_player_id = ? and country_id = ?",params[:game_player_id],params[:attacker_country_id]])
+    @game_player_attacking_country = GamePlayerCountry.find(:first, :conditions =>["game_player_id = ? and country_id = ? and armies > 1",params[:game_player_id],params[:attacker_country_id]])
     @game_player_target_country = GamePlayerCountry.find(:first, :conditions =>["country_id = ?",params[:target_country_id]])
     @armies = params[:armies].to_i
     
