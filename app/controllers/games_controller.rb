@@ -32,6 +32,8 @@ class GamesController < ApplicationController
   def get_neighbours
     @neighbours = Country.find(params[:country_id]).neighbours
     @game_player_country = GamePlayerCountry.find(:first, :conditions =>["game_player_id = ? and country_id = ?",params[:game_player_id],params[:country_id]])
+    @game_player = @game_player_country.game_player
+    render :partial => "attack_target", :layout => false
   end
 
   def attack
