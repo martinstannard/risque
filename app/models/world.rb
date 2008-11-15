@@ -40,7 +40,9 @@ class World < ActiveRecord::Base
     File.open("#{filename}.dot", 'w') do |f|
       f << text.uniq.join("\n")
     end
-    `dot -Tpng -Gsize=6,6 -o#{File.join(RAILS_ROOT, 'public', 'images', filename + '.png')} "#{filename}.dot"`
+    filename = File.join(RAILS_ROOT, 'public', 'images', filename + '.png')
+    logger.info filename
+    `dot -Tpng -Gsize=6,6 -o#{filename} "#{filename}.dot"`
   end
 
   def graph_by_player(filename = 'world', options = {})
