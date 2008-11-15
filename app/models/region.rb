@@ -55,6 +55,14 @@ class Region < ActiveRecord::Base
     borders.select { |n| !n.is_regional? }
   end
 
+  def award_bonuses
+    if bonus?
+      player = countries.first.game_player
+      player.add_armies(bonus)
+  end
+
+  protected
+
   def bonus?
     countries.collect { |c| c.game_player }.uniq.size == 1
   end

@@ -43,6 +43,10 @@ class World < ActiveRecord::Base
     `dot -Tpng -Gsize=6,6 -o#{file_prefix}.png "#{file_prefix}.dot"`
   end
 
+  def award_bonuses
+    regions.each { |r| r.add_bonus }
+  end
+
   protected
 
   def generate_regions
