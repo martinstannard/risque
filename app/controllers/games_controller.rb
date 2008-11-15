@@ -1,4 +1,4 @@
-class GameController < ApplicationController
+class GamesController < ApplicationController
   def new
     
   end
@@ -11,5 +11,7 @@ class GameController < ApplicationController
     g.world = World.begat
     g.save
     g.players << Player.find(:all,:limit => 4)
+    redirect_to game_path(g)
+    return false 
   end
 end
