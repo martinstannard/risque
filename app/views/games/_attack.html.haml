@@ -8,26 +8,9 @@
         %span 
           Attack from
           %p
-            %select{:id => "attacker_country_id"}
+            %select{:id => "attacker_country_id", :onchange => "get_neighbours(#{@game_player.id}, #{@game_player.game_id})"}
               - @game_player.countries.each do |c|
                 %option{:value => c.id}
                   = c.name
-      %label
-        %span 
-          Target country
-          %p
-            %select{:id => "target_country_id"}
-              - @neighbouring_countries.each do |c|
-                %option{:value => c.id}
-                  = c.name
-      %label
-        %span
-          Armies to attack with
-          %p
-            %select{:id => "armies"}
-              - @game_player_country.armies.times do |t|
-                %option
-                  = t+1
+      %div#attack_target
 
-    %fieldset
-      %input{:type=> "button", :onclick => "attack(#{@game_player.game_id},#{@game_player.id},#{@attacker.id}, #{@target_id}, #{@armies})",:value => "Unleash Hell"}
