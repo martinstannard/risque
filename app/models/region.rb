@@ -4,11 +4,15 @@ class Region < ActiveRecord::Base
   has_many :countries, :dependent => :destroy
 
   after_create :generate_countries
+  
+  def label
+    name
+  end
 
   def generate_countries(options = {})
     options[:min] ||= 4
     options[:max] ||= 10
-    (rand(options[:max] - options[:min]) + options[:max]).times do |t|
+    (rand(options[:max] - options[:min]) + options[:min]).times do |t|
       puts "generating country #{t}" 
       countries << Country.create(:name => "country_#{t}")
     end
