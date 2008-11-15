@@ -1,0 +1,29 @@
+!!! Strict
+%html{"xml:lang" => "en-au", :lang => "en-au", :xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %meta{:content => "text/html; charset=utf-8", "http-equiv" => "Content-Type"}
+    %meta{:content => "IE=EmulateIE7", "http-equiv" => "X-UA-Compatible"}
+    %title Risque
+  %body
+    %h1 Risque!
+
+    %table#status
+      %thead
+        %tr
+          %td Player
+          %td Countries
+          %td Armies
+      %tbody
+        %tr
+          %td Joe
+          %td 14
+          %td 154
+        %tr
+          %td Sam
+          %td 12
+          %td 134
+    
+    = yield :layout
+  
+    %div#map
+      %img{:width => '960', :height => '500'}
