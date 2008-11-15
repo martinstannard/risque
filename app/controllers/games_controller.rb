@@ -21,14 +21,25 @@ class GamesController < ApplicationController
   
   def game
     @game = Game.find(params[:id])
-    @game_player = @game.current_player
+    @game_player = @game.get_game_player    
     render :partial => "allocate"
   end
 
   def allocate_armies
-    
-    
-    game_player.armies += params[:allocation]
+    @game_player_country = GamePlayerCountry.find(:first, :conditions =>["game_player_id = ? and country_id = ?",params[:game_player_id],params[:country_id]])
+    @game_player_country.armies += params[:armies].to_i
+    @game_player_country.save
+    @game_player = @game_player_country.game_player
+    @game_player.armies_to_allocate -= params[:armies].to_i
+    @game_player.save
+    @game = @game_player.game
+    @game_player = @game_player.game.get_game_player
+    if @game_player.nil? && @game.is_allocation_round?
+      @game_player = @game.game_player.find(:first,:conditions => "id ASC")
+      @game.is_allocation_round = false
+      @game.save
+    end
+    render :partial => "allocate", :layout => false
   end
 
 end

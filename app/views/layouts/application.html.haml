@@ -5,6 +5,9 @@
     %meta{:content => "IE=EmulateIE7", "http-equiv" => "X-UA-Compatible"}
     %title Risque
     = javascript_include_tag 'jquery-1.2.6.pack', :cache => true
+    = javascript_include_tag 'risk'
+    %script
+      = "var global_token = '" + form_authenticity_token + "';"
     
   %body
     %h1 Risque!
