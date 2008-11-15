@@ -59,6 +59,7 @@ class Region < ActiveRecord::Base
     if bonus?
       player = countries.first.game_player
       player.add_armies(bonus)
+    end
   end
 
   protected

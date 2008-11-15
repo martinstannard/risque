@@ -9,4 +9,7 @@ class Country < ActiveRecord::Base
     "country_#{id}"
   end
 
+  def attack(target)
+  end
+
 end
