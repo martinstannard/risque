@@ -6,3 +6,4 @@ config/database.*
 db/schema.rb
 *.svg
 *.png
+.DS_Store
