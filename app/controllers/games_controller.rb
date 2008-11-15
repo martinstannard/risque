@@ -25,6 +25,11 @@ class GamesController < ApplicationController
     render :partial => "allocate"
   end
 
+  def get_neighbours
+    @neighbours = Country.find(params[:country_id]).neighbours
+    @game_player_country = GamePlayerCountry.find(:first, :conditions =>["game_player_id = ? and country_id = ?",params[:game_player_id],params[:country_id]])
+  end
+
   def attack
     @game_player_attacking_country = GamePlayerCountry.find(:first, :conditions =>["game_player_id = ? and country_id = ?",params[:game_player_id],params[:attacker_country_id]])
     @game_player_target_country = GamePlayerCountry.find(:first, :conditions =>["country_id = ?",params[:target_country_id]])

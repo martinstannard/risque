@@ -1,0 +1,18 @@
+%label
+  %span 
+    Target country
+    %p
+      %select{:id => "target_country_id"}
+        - @neighbours.each do |c|
+          %option{:value => c.neighbour.id}
+            = c.neighour.name
+%label
+  %span
+    Armies to attack with
+    %p
+      %select{:id => "armies"}
+        - (@game_player_country.armies - 1).times do |t|
+          %option
+            = t+1
+%fieldset
+  %input{:type=> "button", :onclick => "attack(#{@game_player.game_id},#{@game_player.id},#{@attacker.id}, #{@target_id}, #{@armies})",:value => "Unleash Hell"}
