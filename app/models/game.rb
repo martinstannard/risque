@@ -1,9 +1,9 @@
 class Game < ActiveRecord::Base
   
-  has_many :game_players
+  has_many :game_players, :dependent => :destroy
   has_many :players, :through => :game_players
-  belongs_to :world
-  has_one :current_player, :class => "Player", :foreign_key => "current_player"
+  belongs_to :world, :dependent => :destroy
+  belongs_to :current_player, :class_name => "GamePlayer", :foreign_key => "current_player", :dependent => :destroy
   
   def allocate_countries
     countries = []
@@ -15,6 +15,7 @@ class Game < ActiveRecord::Base
     countries = countries.sort_by{ rand }
     countries.in_groups_of(game_players.size).each do |group|
       group.each_with_index do |country,index|
+        next if country.nil?
         GamePlayerCountry.create!(:game_player_id => game_players[index].id,:country_id => country.id, :armies => 1)
       end
     end

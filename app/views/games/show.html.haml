@@ -2,5 +2,5 @@
 %script
   = "var game_id = '#{params[:id]}';"
   $.post("/games/game/" + game_id,function(data) {
-  $("out").html(data);
+  $("#out").html(data);
   })
