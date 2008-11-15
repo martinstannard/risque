@@ -24,4 +24,11 @@ class GamesController < ApplicationController
     @game_player = @game.current_player
     render :partial => "allocate"
   end
+
+  def allocate_armies
+    
+    
+    game_player.armies += params[:allocation]
+  end
+
 end
