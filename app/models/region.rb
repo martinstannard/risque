@@ -34,11 +34,13 @@ class Region < ActiveRecord::Base
   end
 
   def create_borders
-    countries.each do |c|
-      other_countries = countries.dup - [c]
-      border_count = rand(3) + 1
-      border_count.times do
-        border
+    2.times do
+      countries.each do |c|
+        other_countries = countries.dup - [c]
+        border_count = rand(3) + 1
+        border_count.times do
+          border
+        end
       end
     end
   end
