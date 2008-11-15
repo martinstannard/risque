@@ -28,4 +28,8 @@ class Game < ActiveRecord::Base
     end
   end
     
+  def award_armies(game_player)
+    world.award_armies(game_player)
+  end
+
 end

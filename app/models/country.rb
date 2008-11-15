@@ -6,7 +6,8 @@ class Country < ActiveRecord::Base
   has_one :game_player, :through => :game_player_country
 
   def label
-    "country_#{id}"
+    label = "country_#{id}" 
+    label << "_#{game_player_country.armies}" if game_player_country
   end
 
   def attack(target, attacker_dice = 1, defender_dice = 1)

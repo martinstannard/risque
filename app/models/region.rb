@@ -55,10 +55,10 @@ class Region < ActiveRecord::Base
     borders.select { |n| !n.is_regional? }
   end
 
-  def award_bonuses
+  def award_bonuses(game_player)
     if bonus?
       player = countries.first.game_player
-      player.add_armies(bonus)
+      player.add_armies(bonus) if game_player == player
     end
   end
 
