@@ -18,7 +18,9 @@
           Available armies
           %p
             %select
-              %option 1
-              %option 2
+              - @game_player.armies_to_allocate.times do |t|
+                %option
+                  = t+1
+              
     %fieldset
       = submit_tag 'Add', :class => "submit"
