@@ -26,7 +26,7 @@ class Region < ActiveRecord::Base
 
   def border
     country = rand_country
-    Neighbour.create(:country_id => country.id, :neighbour_id => self.rand_other_country(country).id)
+    Neighbour.create_borders(country.id, self.rand_other_country(country).id)
   end
 
   def create_borders
