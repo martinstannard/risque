@@ -11,8 +11,8 @@ class Neighbour < ActiveRecord::Base
     y Neighbour.all
     Neighbour.all.each do |n|
       c = n.country
-      rel = "#{c.label + c.region.colour} -> country_#{n.neighbour.id.to_s + n.neighbour.region.colour};\n"
-      rel << "#{c.label + c.region.colour} [shape=rectangle,color=#{c.region.colour},style=filled];\n"
+      rel = "#{c.label} -> country_#{n.neighbour.id};\n"
+      rel << "#{c.label} [shape=rectangle,color=#{c.region.colour},style=filled];\n"
       puts rel
       text << rel
     end
