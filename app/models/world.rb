@@ -19,15 +19,15 @@ class World < ActiveRecord::Base
     text << "fontsize = 36,"
     text << "label = \"Risque, #{Date.today}\"]"
     regions.each do |region|
-      text << "subgraph #{region.label}{\n"
       text << " node[style=filled];\n"
+      text << "subgraph #{region.label}{\n"
       region.internal_borders.each do |n|
         c = n.country
         text << "#{c.label} -> country_#{n.neighbour.id};\n"
         text << "#{c.label} [shape=rectangle,color=#{c.region.colour},style=filled];\n"
       end
-      text << " label=\"#{region.label}\";\n" 
-      text << " color=blue\n"
+      text << "label=\"#{region.label}a\";\n" 
+      text << "color=blue\n"
       text << "}\n"
       region.external_borders.each do |n|
         c = n.country
