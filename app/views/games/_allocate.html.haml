@@ -1,5 +1,8 @@
 %div#game-console
-  %p You have 34 armies to allocate
+  %p
+    You have 
+    = @game_player.armies_to_allocate
+    armies to allocate
   %form
     %fieldset
       %label
@@ -7,8 +10,9 @@
           Your countries
           %p
             %select
-              %option Foo
-              %option Bar
+              - @game_player.countries.each do |c|
+                %option
+                  = c.name
       %label
         %span
           Available armies
