@@ -1,4 +1,6 @@
-%h2 Game#show
-%p Find me in app/views/game/show.html.haml
-
-= render :partial => "allocate"
+#out
+%script
+  = "var game_id = '#{params[:id]}';"
+  $.post("/games/game/" + game_id,function(data) {
+  $("out").html(data);
+  })
