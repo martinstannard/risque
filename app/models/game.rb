@@ -29,6 +29,7 @@ class Game < ActiveRecord::Base
   end
   
   def get_game_player
+    return nil if self.current_player.nil?
     if self.current_player.armies_to_allocate == 0
       self.current_player = self.game_players.find(:first,:conditions => "armies_to_allocate > 0")
       self.save
