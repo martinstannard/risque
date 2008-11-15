@@ -36,4 +36,8 @@ class Game < ActiveRecord::Base
     self.current_player
   end
     
+  def award_armies(game_player)
+    world.award_armies(game_player)
+  end
+
 end

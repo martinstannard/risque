@@ -13,7 +13,7 @@ class World < ActiveRecord::Base
     w
   end
 
-  def graph(file_prefix = 'world')
+  def graph(filename = 'world', options = {})
     text = ["digraph world {"]
     text << "graph [fontname = \"Helvetica\","
     text << "fontsize = 36,"
@@ -37,17 +37,52 @@ class World < ActiveRecord::Base
     end
     puts text
 
-    File.open("#{file_prefix}.dot", 'w') do |f|
+    File.open("#{filename}.dot", 'w') do |f|
       f << text.uniq.join("\n")
     end
-    `dot -Tpng -Gsize=6,6 -o#{file_prefix}.png "#{file_prefix}.dot"`
+    `dot -Tpng -Gsize=6,6 -o#{File.join(RAILS_ROOT, 'public', 'images', filename + '.png')} "#{filename}.dot"`
   end
 
-  def award_bonuses
-    regions.each { |r| r.add_bonus }
+  def graph_by_player(filename = 'world', options = {})
+    text = ["digraph world {"]
+    text << "graph [fontname = \"Helvetica\","
+    text << "fontsize = 36,"
+    text << "label = \"Risque, #{Date.today}\"]"
+    regions.each do |region|
+      text << " node[style=filled];\n"
+      text << "subgraph #{region.label}{\n"
+      region.internal_borders.each do |n|
+        c = n.country
+        text << "#{c.label} -> country_#{n.neighbour.id};\n"
+        text << "#{c.label} [shape=rectangle,color=#{c.region.colour},style=filled];\n"
+      end
+      text << "label=\"#{region.label}a\";\n" 
+      text << "color=blue\n"
+      text << "}\n"
+      region.external_borders.each do |n|
+        c = n.country
+        text << "#{c.label} -> country_#{n.neighbour.id};\n"
+        text << "#{c.label} [shape=rectangle,color=#{c.region.colour},style=filled];\n"
+      end
+    end
+    puts text
+
+    File.open("#{filename}.dot", 'w') do |f|
+      f << text.uniq.join("\n")
+    end
+    `dot -Tpng -Gsize=6,6 -o#{File.join(RAILS_ROOT, 'public', 'images', filename + '.png')} "#{filename}.dot"`
+  end
+
+  def award_armies(game_player)
+    game_player.add_armies(game_player.countries.size / 3)
+    #TODO award_bonuses game_player
   end
 
   protected
+
+  def award_bonuses(game_player)
+    regions.each { |r| r.add_bonuses(game_player) }
+  end
 
   def generate_regions
     7.times do |t|

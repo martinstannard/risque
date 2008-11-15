@@ -6,7 +6,9 @@ class Country < ActiveRecord::Base
   has_one :game_player, :through => :game_player_country
 
   def label
-    "country_#{id}"
+    label = "country_#{id}" 
+    label << "_#{game_player_country.armies}" unless game_player_country.nil?
+    label
   end
 
   def attack(target, attacker_dice = 1, defender_dice = 1)
@@ -14,6 +16,7 @@ class Country < ActiveRecord::Base
     results.each do |r|
       r ?  target.game_player_country.add_armies(-1) : game_player_country.add_armies(-1)
     end
+    # has the target been vanquished
   end
 
   protected
