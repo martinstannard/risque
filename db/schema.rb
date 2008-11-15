@@ -9,11 +9,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081115001313) do
+ActiveRecord::Schema.define(:version => 20081115003311) do
 
   create_table "countries", :force => true do |t|
     t.integer  "region_id"
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "game_player_countries", :force => true do |t|
+    t.integer  "game_player_id"
+    t.integer  "country_id"
+    t.integer  "armies",         :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
