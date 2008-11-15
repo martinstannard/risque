@@ -42,6 +42,7 @@ class GamesController < ApplicationController
     @armies = params[:armies].to_i
     
     @game_player_attacking_country.attack(@game_player_target_country,@armies)
+    @game.world.graph
     render :partial => "attack", :layout => false
   end
 
@@ -58,6 +59,7 @@ class GamesController < ApplicationController
       @game_player = @game.game_players.find(:first,:order => "id ASC")
       @game.is_allocation_round = 0
       @game.save!
+      @game.world.graph
       render :partial => "attack", :layout => false
     else
       render :partial => "allocate", :layout => false
