@@ -21,8 +21,12 @@ class GamesController < ApplicationController
   
   def game
     @game = Game.find(params[:id])
-    @game_player = @game.get_game_player    
-    render :partial => "allocate"
+    @game_player = @game.get_game_player
+    if @game.is_allocation_round?
+      render :partial => "allocate"
+    else
+      render :partial => "attack"
+    end
   end
 
   def get_neighbours
