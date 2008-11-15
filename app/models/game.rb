@@ -44,4 +44,8 @@ class Game < ActiveRecord::Base
     world.award_armies(game_player)
   end
 
+  def graph
+    world.graph
+  end
+
 end

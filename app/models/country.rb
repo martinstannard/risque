@@ -7,7 +7,7 @@ class Country < ActiveRecord::Base
 
   def label
     label = "country_#{id}" 
-    label << "_#{game_player_country.armies}" unless game_player_country.nil?
+    #label << "_#{game_player_country.armies}" unless game_player_country.nil?
     label
   end
 
@@ -16,7 +16,22 @@ class Country < ActiveRecord::Base
     results.each do |r|
       r ?  target.game_player_country.add_armies(-1) : game_player_country.add_armies(-1)
     end
+    attackers_left = attacker_dice.find_all { |r| r.true? }.size
+    if takeover(target, attackers_left)
+      return "You defeated the enemy. You have overrun their territory."
+    else
+      return "#{attackers_left} of #{attacker_dice} attacking armies survived."
+    end
+  end
+
+  def takeover(target, attackers_left)
     # has the target been vanquished
+    if target.game_player_country.armies == 0
+      target.game_player_country.update_attribute(:game_player_id, self.game_player.id)
+      target.game_player_country.update_attribute(:armies, attackers_left)
+      return true
+    end
+    false
   end
 
   protected
