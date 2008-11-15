@@ -2,7 +2,7 @@ development:
   adapter: mysql
   database: risk_development
   username: root
-  password:
+  password: root@mac
   host: localhost
   
 test:
