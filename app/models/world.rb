@@ -39,7 +39,7 @@ class World < ActiveRecord::Base
     File.open("#{id}.dot", 'w') do |f|
       f << text.uniq.join("\n")
     end
-    `dot -Tpng -Gsize=12,12 -o#{File.join(RAILS_ROOT, 'public', 'images', id.to_s)}.png "#{id}.dot"`
+    `dot -Tpng -Gsize=12,12 -o#{File.join(RAILS_ROOT, 'public', 'images', id.to_s)}.png "#{id}.dot"` unless RAILS_ENV == 'testing'
   end
 
   def award_armies(game_player)
