@@ -16,15 +16,19 @@ class Country < ActiveRecord::Base
   def attack(target, attacker_dice = 1, defender_dice = 1)
     strengths = battle_strengths(attacker_dice, target)
     results = roller(*strengths)
-    results.each do |r|
-      r ? target.game_player_country.add_armies(-1) : game_player_country.add_armies(-1)
-    end
-    attackers_left = results.find_all { |r| r }.size
+    kill_armies(results)
     if takeover(target, attackers_left)
       return "You defeated the enemy. You have overrun their territory."
     else
       return "#{attackers_left} of #{attacker_dice} attacking armies survived."
     end
+  end
+
+  def kill_armies(target, results)
+    results.each do |r|
+      r ? target.game_player_country.add_armies(-1) : game_player_country.add_armies(-1)
+    end
+    results.find_all { |r| r }.size
   end
 
   def takeover(target, attackers_left)
