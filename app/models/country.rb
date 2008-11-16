@@ -10,6 +10,7 @@ class Country < ActiveRecord::Base
   def label
     label = "Country_#{id}_" 
     label << "#{game_player_country.armies}_armies" unless game_player_country.nil?
+    logger.info label
     label
   end
 
@@ -17,6 +18,9 @@ class Country < ActiveRecord::Base
     strengths = battle_strengths(attacker_dice, target)
     results = roller(*strengths)
     attackers_left = kill_armies(target, results)
+    logger.info "attacker_dice #{attacker_dice}"
+    logger.info results.to_yaml
+    logger.info "there were #{attackers_left} attackers left"
     if takeover(target, attackers_left)
       return "You defeated the enemy. You have overrun their territory."
     else
