@@ -4,6 +4,7 @@ class Game < ActiveRecord::Base
   has_many :players, :through => :game_players
   belongs_to :world, :dependent => :destroy
   belongs_to :current_player, :class_name => "GamePlayer", :foreign_key => "current_player", :dependent => :destroy
+  serialize :player_list
 
   after_create :setup
 
@@ -13,6 +14,7 @@ class Game < ActiveRecord::Base
     self.allocate_countries
     self.allocate_initial_armies
     self.current_player = self.game_players.first
+    self.player_list = game_players.map{|p| p.id}
     self.save
   end
   
@@ -40,9 +42,12 @@ class Game < ActiveRecord::Base
   end
 
   def get_next_player
-    
+    self.current_player = GamePlayer.find(self.player_list.shift)
+    self.player_list << self.current_player.id
+    self.save
+    self.player_list.first
   end
-  
+
   def get_game_player
     if self.current_player && self.current_player.armies_to_allocate == 0
       self.current_player = self.game_players.find(:first,:conditions => "armies_to_allocate > 0")
