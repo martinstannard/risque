@@ -9,7 +9,7 @@ class Country < ActiveRecord::Base
 
   def label
     label = "Country_#{id}_" 
-    label << "#{game_player_country.armies}_armies" unless game_player_country.nil?
+    label << "#{self.game_player_country.armies}_armies" unless game_player_country.nil?
     label
   end
 
