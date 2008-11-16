@@ -8,8 +8,8 @@ class Country < ActiveRecord::Base
   @@colours = %w[lightblue red green orange yellow pink blue violet]
 
   def label
-    label = "country_#{id}" 
-    label << "_#{game_player_country.armies}" unless game_player_country.nil?
+    label = "Country #{id} " 
+    label << "#{game_player_country.armies} armies" unless game_player_country.nil?
     label
   end
 
