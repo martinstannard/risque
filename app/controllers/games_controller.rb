@@ -63,6 +63,7 @@ class GamesController < ApplicationController
       @game.is_allocation_round = 0
       @game.save!
       @game.world.graph
+      logger.info("wtesting...")
       render :partial => "attack", :layout => false
     else
       render :partial => "allocate", :layout => false
