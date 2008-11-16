@@ -17,6 +17,7 @@ class Country < ActiveRecord::Base
   def attack(target, attacker_dice = 1, defender_dice = 1)
     strengths = battle_strengths(attacker_dice, target)
     results = roller(*strengths)
+    actual_battles = results.size
     attackers_left = kill_armies(target, results)
     logger.info "attacker_dice #{attacker_dice}"
     logger.info results.to_yaml
@@ -24,7 +25,7 @@ class Country < ActiveRecord::Base
     if takeover(target, attackers_left)
       return "You defeated the enemy. You have overrun their territory."
     else
-      return "#{attackers_left} of #{attacker_dice} attacking armies survived."
+      return "You could not defeat the infidels - better luck next time."
     end
   end
 
