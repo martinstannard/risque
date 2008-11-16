@@ -1,6 +1,7 @@
 log
 *.sw*
 *.dot
+*.log
 config/database.yml
 config/database.*
 db/schema.rb
