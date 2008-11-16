@@ -5,6 +5,8 @@ class Country < ActiveRecord::Base
   has_one :game_player_country
   has_one :game_player, :through => :game_player_country
 
+  @@colours = %w[lightblue red green orange yellow pink blue violet]
+
   def label
     label = "country_#{id}" 
     label << "_#{game_player_country.armies}" unless game_player_country.nil?
@@ -16,7 +18,7 @@ class Country < ActiveRecord::Base
     results.each do |r|
       r ?  target.game_player_country.add_armies(-1) : game_player_country.add_armies(-1)
     end
-    attackers_left = results.find_all { |r| r.true? }.size
+    attackers_left = results.find_all { |r| r }.size
     if takeover(target, attackers_left)
       return "You defeated the enemy. You have overrun their territory."
     else
@@ -32,6 +34,10 @@ class Country < ActiveRecord::Base
       return true
     end
     false
+  end
+
+  def colour(mode)
+    mode == :region ? region.colour : @@colours[game_player.player_id % 4]
   end
 
   protected

@@ -8,14 +8,7 @@ class GamesController < ApplicationController
   end
   
   def create
-    g = Game.new
-    g.world = World.begat
-    g.save!
-    g.players << Player.find(:all,:limit => 4).sort_by{ rand }
-    g.allocate_countries
-    g.allocate_initial_armies
-    g.current_player = g.game_players.first
-    g.save!
+    g = Game.create
     redirect_to game_path(g)
     return false 
   end
@@ -42,10 +35,12 @@ class GamesController < ApplicationController
     @game_player_target_country = GamePlayerCountry.find(:first, :conditions =>["country_id = ?",params[:target_country_id]])
     @armies = params[:armies].to_i
     
-    @game_player_attacking_country.country.attack(@game_player_target_country.country,@armies)
+    report = @game_player_attacking_country.country.attack(@game_player_target_country.country,@armies)
+    flash[:notice] = report
+    logger.info report
     @game = @game_player_attacking_country.game_player.game
     @game_player = @game.get_game_player
-    @game.world.graph
+    @game.world.graph(:mode => :player)
     render :partial => "attack", :layout => false
   end
 
@@ -58,14 +53,15 @@ class GamesController < ApplicationController
     @game_player.save
     @game = @game_player.game
     @game_player = @game_player.game.get_game_player
+    @game.world.graph(:mode => :player)
     if @game_player.nil? && @game.is_allocation_round?
       @game_player = @game.game_players.find(:first,:order => "id ASC")
-      @game.is_allocation_round = 0
+      @game.is_allocation_round = false
       @game.save!
-      @game.world.graph
-      logger.info("wtesting...")
+      logger.info("going to attack...")
       render :partial => "attack", :layout => false
     else
+      logger.info("still allocating...")
       render :partial => "allocate", :layout => false
     end
   end

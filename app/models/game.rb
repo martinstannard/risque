@@ -4,6 +4,17 @@ class Game < ActiveRecord::Base
   has_many :players, :through => :game_players
   belongs_to :world, :dependent => :destroy
   belongs_to :current_player, :class_name => "GamePlayer", :foreign_key => "current_player", :dependent => :destroy
+
+  after_create :setup
+
+  def setup
+    self.world = World.begat
+    self.players << Player.find(:all,:limit => 4).sort_by{ rand }
+    self.allocate_countries
+    self.allocate_initial_armies
+    self.current_player = self.game_players.first
+    self.save
+  end
   
   def allocate_countries
     countries = []

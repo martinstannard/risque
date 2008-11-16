@@ -13,10 +13,12 @@ class World < ActiveRecord::Base
     w
   end
 
-  def graph(filename = 'world', options = {})
+  def graph(options = {})
+    options[:mode] ||= :region
     text = ["digraph world {"]
     text << "graph [fontname = \"Helvetica\","
     text << "fontsize = 36,"
+    text << "ratio = 0.6,"
     text << "label = \"Risque, #{Date.today}\"]"
     regions.each do |region|
       text << " node[style=filled];\n"
@@ -24,55 +26,20 @@ class World < ActiveRecord::Base
       region.internal_borders.each do |n|
         c = n.country
         text << "#{c.label} -> #{n.neighbour.label};\n"
-        text << "#{c.label} [shape=rectangle,color=#{c.region.colour},style=filled];\n"
+        text << "#{c.label} [shape=rectangle,color=#{c.colour(options[:mode])},style=filled];\n"
       end
-      text << "label=\"#{region.label}a\";\n" 
-      text << "color=blue\n"
-      text << "}\n"
+      text << "label=\"#{region.label}a\";\ncolor=blue\n}\n"
       region.external_borders.each do |n|
         c = n.country
         text << "#{c.label} -> #{n.neighbour.label};\n"
-        text << "#{c.label} [shape=rectangle,color=#{c.region.colour},style=filled];\n"
+        text << "#{c.label} [shape=rectangle,color=#{c.colour(options[:mode])},style=filled];\n"
       end
     end
-    puts text
-
+    text << "}\n"
     File.open("#{id}.dot", 'w') do |f|
       f << text.uniq.join("\n")
     end
-    filename = File.join(RAILS_ROOT, 'public', 'images', filename + '.png')
-    logger.info filename
     `dot -Tpng -Gsize=12,12 -o#{File.join(RAILS_ROOT, 'public', 'images', id.to_s)}.png "#{id}.dot"`
-  end
-
-  def graph_by_player(filename = 'world', options = {})
-    text = ["digraph world {"]
-    text << "graph [fontname = \"Helvetica\","
-    text << "fontsize = 36,"
-    text << "label = \"Risque, #{Date.today}\"]"
-    regions.each do |region|
-      text << " node[style=filled];\n"
-      text << "subgraph #{region.label}{\n"
-      region.internal_borders.each do |n|
-        c = n.country
-        text << "#{c.label} -> country_#{n.neighbour.id};\n"
-        text << "#{c.label} [shape=rectangle,color=#{c.region.colour},style=filled];\n"
-      end
-      text << "label=\"#{region.label}a\";\n" 
-      text << "color=blue\n"
-      text << "}\n"
-      region.external_borders.each do |n|
-        c = n.country
-        text << "#{c.label} -> country_#{n.neighbour.id};\n"
-        text << "#{c.label} [shape=rectangle,color=#{c.region.colour},style=filled];\n"
-      end
-    end
-    puts text
-
-    File.open("#{filename}.dot", 'w') do |f|
-      f << text.uniq.join("\n")
-    end
-    `dot -Tpng -Gsize=6,6 -o#{File.join(RAILS_ROOT, 'public', 'images', filename + '.png')} "#{filename}.dot"`
   end
 
   def award_armies(game_player)
@@ -86,8 +53,10 @@ class World < ActiveRecord::Base
     regions.each { |r| r.add_bonuses(game_player) }
   end
 
-  def generate_regions
-    7.times do |t|
+  def generate_regions(options = {})
+    options[:min] ||= 2
+    options[:max] ||= 4
+    (rand(options[:max] - options[:min]) + options[:min]).times do |t|
       puts "generation region #{t}"
       regions << Region.create(:name => "region_#{t}", :colour => @@colours[t])
     end
