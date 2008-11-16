@@ -1,9 +1,14 @@
 %div#game-console
-  %p
+  %h2
     = @game_player.player.name
-    has
-    = @game_player.armies_to_allocate
-    armies to allocate
+    
+    %span
+      %strong
+      You have armies
+      = @game_player.armies_to_allocate
+      to allocate
+    %span.notice
+      = flash[:notice] if flash[:notice]
   %form
     %fieldset
       %ol

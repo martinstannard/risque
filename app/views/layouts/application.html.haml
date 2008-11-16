@@ -12,7 +12,11 @@
     
   %body
     %div#container
-      %h1 Clever name here
+      %h1
+        Clever name here
+        %span.notice
+        - flash[:notice] if flash[:notice]
+        
     
       = yield :layout
   

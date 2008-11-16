@@ -1,7 +1,11 @@
 %div#game-console
-  %p
+  %h2
     = @game_player.player.name
-    are you ready to kick some arse?
+    %span
+      Are you ready to kick some arse?
+    %span.notice
+      = flash[:notice] if flash[:notice]
+
   %form
     %fieldset
       %ol

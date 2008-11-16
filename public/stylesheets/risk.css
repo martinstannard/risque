@@ -22,6 +22,20 @@ h1 {
 	color: #fff;
 }
 
+h2 {
+	font-weight: bold;
+}
+
+	h2 span {
+		font-weight: normal;
+		margin-left: 2em;
+	}
+	h2 span.notice {
+		margin-left: 2em;
+		font-weight: bold;
+		color: green !important;
+	}
+
 div#game-console {
 	padding: .5em 1em .5em 1em;
 	background-color: #ddd;
