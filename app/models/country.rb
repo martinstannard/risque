@@ -16,7 +16,7 @@ class Country < ActiveRecord::Base
   def attack(target, attacker_dice = 1, defender_dice = 1)
     strengths = battle_strengths(attacker_dice, target)
     results = roller(*strengths)
-    kill_armies(target, results)
+    attacker_left = kill_armies(target, results)
     if takeover(target, attackers_left)
       return "You defeated the enemy. You have overrun their territory."
     else
