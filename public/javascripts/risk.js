@@ -4,6 +4,14 @@ function allocate_armies(game_id,game_player_id) {
   })
 }
 
+function pass_turn(game_id,game_player_id) {
+  $.post("/games/pass_turn",{game_id: game_id, game_player_id: game_player_id, authenticity_token: global_token}, function(data) {
+    $("#out").html(data);
+  })
+}
+
+
+
 function get_neighbours(game_player_id, game_id) {
 	$.post("/games/get_neighbours",{game_id: game_id, game_player_id: game_player_id, country_id: $('#attacker_country_id').val(),authenticity_token: global_token}, function(data){
 		$("#attack_target").html(data);

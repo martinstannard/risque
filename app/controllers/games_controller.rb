@@ -44,6 +44,17 @@ class GamesController < ApplicationController
     render :partial => "attack", :layout => false
   end
 
+  def pass_turn
+    @game = Game.find(params[:game_id])
+    @game_player = @game.get_game_player
+
+    #TODO avoid the magic number of how many armies you get per turn.
+    @game_player.add_armies(5)
+    @game.world.award_bonuses(@game_player)
+    flash[:notice] = nil
+    render :partial => "allocate", :layout => false
+  end
+
   def allocate_armies
     @game_player_country = GamePlayerCountry.find(:first, :conditions =>["game_player_id = ? and country_id = ?",params[:game_player_id],params[:country_id]])
     @game_player_country.armies += params[:armies].to_i

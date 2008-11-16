@@ -10,6 +10,8 @@
     %fieldset
       %ol
         %li
+          %input{:type=> "button", :onclick => "pass_turn(#{@game_player.game_id},#{@game_player.id})",:value => "Pass turn"}
+        %li
           %label Attack from
           %select{:id => "attacker_country_id", :onchange => "get_neighbours(#{@game_player.id}, #{@game_player.game_id})"}
             %option Please choose

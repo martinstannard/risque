@@ -38,6 +38,10 @@ class Game < ActiveRecord::Base
       gp.save
     end
   end
+
+  def get_next_player
+    
+  end
   
   def get_game_player
     if self.current_player && self.current_player.armies_to_allocate == 0
