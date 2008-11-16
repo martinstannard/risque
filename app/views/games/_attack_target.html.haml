@@ -3,7 +3,8 @@
   %select{:id => "target_country_id"}
     - @neighbours.each do |c|
       %option{:value => c.neighbour.id}
-        = c.neighbour.name
+        Country
+        = c.neighbour.id
 
 %li
   %label Armies to attack with
