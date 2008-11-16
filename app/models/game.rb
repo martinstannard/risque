@@ -9,6 +9,7 @@ class Game < ActiveRecord::Base
   after_create :setup
 
   def setup
+    World.destroy_all
     self.world = World.begat
     self.players << Player.find(:all,:limit => 4).sort_by{ rand }
     self.allocate_countries
