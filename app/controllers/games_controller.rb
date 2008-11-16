@@ -116,7 +116,7 @@ class GamesController < ApplicationController
 
   def map
     game = Game.find(params[:id])
-    game.world.graph
+    game.world.graph(:mode => :player)
     send_data(`cat #{File.join(RAILS_ROOT, 'public', 'images', game.world_id.to_s)}.png`,
               :type => 'image/png', :disposition => 'inline') 
   end
