@@ -4,6 +4,7 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'spec'
 require 'spec/rails'
+require File.expand_path(File.dirname(__FILE__) + "/blueprints")
 
 Spec::Runner.configure do |config|
   # If you're not using ActiveRecord you should remove these
@@ -13,6 +14,8 @@ Spec::Runner.configure do |config|
   config.use_instantiated_fixtures  = false
   config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
 
+  config.before(:each) { Sham.reset }
+  
   # == Fixtures
   #
   # You can declare fixtures for each example_group like this:

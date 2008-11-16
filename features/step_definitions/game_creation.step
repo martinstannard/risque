@@ -1,0 +1,9 @@
+Given /^there are no games yet$/ do
+end
+
+When /^I press the begat world button$/ do
+end
+
+Then /^there should be 1 game$/ do
+end
+

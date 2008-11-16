@@ -57,7 +57,6 @@ class World < ActiveRecord::Base
     options[:min] ||= 2
     options[:max] ||= 4
     (rand(options[:max] - options[:min]) + options[:min]).times do |t|
-      puts "generation region #{t}"
       regions << Region.create(:name => "region_#{t}", :colour => @@colours[t])
     end
     create_borders

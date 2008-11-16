@@ -45,7 +45,6 @@ class Country < ActiveRecord::Base
   def roller(attacker_rolls = 1, defender_rolls = 1)
     attack_die = (0...attacker_rolls).collect { |r| dice }.sort[0...defender_rolls].flatten
     defend_die = (0...defender_rolls).collect { |r| dice }.sort.flatten
-    puts "#{attack_die} - #{defend_die}"
     results = []
     defender_rolls.times { |r| results << (attack_die[r] > defend_die[r]) }
     results
