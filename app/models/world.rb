@@ -50,7 +50,7 @@ class World < ActiveRecord::Base
   protected
 
   def award_bonuses(game_player)
-    regions.each { |r| r.add_bonuses(game_player) }
+    regions.each { |r| r.award_bonuses(game_player) }
   end
 
   def generate_regions(options = {})

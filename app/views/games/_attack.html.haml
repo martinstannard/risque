@@ -1,10 +1,16 @@
 %div#game-console
-  %p
+  %h2
     = @game_player.player.name
-    are you ready to kick some arse?
+    %span
+      Are you ready to kick some arse?
+    %span.notice
+      = flash[:notice] if flash[:notice]
+
   %form
     %fieldset
       %ol
+        %li
+          %input{:type=> "button", :onclick => "pass_turn(#{@game_player.game_id},#{@game_player.id})",:value => "Pass turn"}
         %li
           %label Attack from
           %select{:id => "attacker_country_id", :onchange => "get_neighbours(#{@game_player.id}, #{@game_player.game_id})"}
