@@ -4,7 +4,6 @@ class World < ActiveRecord::Base
 
   after_create :generate_regions
 
-  @@colours = %w[lightblue red green orange yellow pink blue violet]
 
   def self.begat
     World.destroy_all
@@ -56,7 +55,7 @@ class World < ActiveRecord::Base
     options[:min] ||= 2
     options[:max] ||= 4
     (rand(options[:max] - options[:min]) + options[:min]).times do |t|
-      regions << Region.create(:name => "region_#{t}", :colour => @@colours[t])
+      regions << Region.create(:name => "region_#{t}", :colour => colours(t))
     end
     create_borders
   end
