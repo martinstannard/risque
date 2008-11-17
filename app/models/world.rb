@@ -17,9 +17,8 @@ class World < ActiveRecord::Base
     options[:mode] ||= :region
     text = ["digraph world {"]
     text << "graph [fontname = \"Helvetica\","
-    text << "fontsize = 36,"
-    text << "ratio = 0.6,"
-    text << "label = \"Risque, #{Date.today}\"]"
+    text << "fontsize = 30,"
+    text << "ratio = 0.5]"
     regions.each do |region|
       text << " node[style=filled];\n"
       text << "subgraph #{region.label}{\n"
