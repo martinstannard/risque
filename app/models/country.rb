@@ -6,20 +6,20 @@ class Country < ActiveRecord::Base
   has_one :game_player, :through => :game_player_country
 
   def label
-    label = name.dup.gsub(' ', '-')
-    label << "_#{game_player_country.armies}_armies" unless game_player_country.nil?
-    logger.info label
+    label = %Q{"#{name}}
+    label << %Q{ #{game_player_country.armies} armies} unless game_player_country.nil?
+    label << '"'
     label
+  end
+
+  def to_dot(options = {})
+   "#{label} [shape=#{region.shape}, color=#{colour(options[:mode])},style=filled];"
   end
 
   def attack(target, attacker_dice = 1, defender_dice = 1)
     strengths = battle_strengths(attacker_dice, target)
     results = roller(*strengths)
-    actual_battles = results.size
     attackers_left = kill_armies(target, results)
-    logger.info "attacker_dice #{attacker_dice}"
-    logger.info results.to_yaml
-    logger.info "there were #{attackers_left} attackers left"
     if takeover(target, attackers_left)
       return "You defeated the enemy. You have overrun their territory."
     else

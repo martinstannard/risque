@@ -18,26 +18,18 @@ class World < ActiveRecord::Base
     options[:mode] ||= :region
     text = ["graph world {"]
     text << "graph [fontname = \"Helvetica\","
-    text << "fontsize = 30, overlap = false, ratio = 0.5]"
+    text << "bgcolor=black, nodesep=.05, fontsize = 50, overlap = scale, ratio = 0.5, labelfontsize=30]"
+
     regions.each do |region|
       text << "subgraph #{region.label}{"
-      text << " node [style=\"filled, bold, rounded\", border=\"black\"];"
-      region.internal_borders.each do |n|
-        c = n.country
-        edges = [c.label, n.neighbour.label].sort
-        text << edges.join(' -- ') + ";"
-        text << "#{c.label} [shape=#{region.shape}, color=#{c.colour(options[:mode])},style=filled];"
-      end
+      text << "  node [style=\"filled, bold, rounded\", border=\"black\"];"
+      region.countries.each { |c| text << c.to_dot }
       text << "label=\"#{region.label}a\";\ncolor=blue\n}\n"
-      region.external_borders.each do |n|
-        c = n.country
-        text << "#{c.label} -- #{n.neighbour.label};\n"
-        text << "#{c.label} [shape=#{region.shape}, color=#{c.colour(options[:mode])},style=filled];\n"
-      end
+      region.internal_borders.each { |border| text << border.to_dot }
+      region.external_borders.each { |border| text << border.to_dot }
     end
     text << "}\n"
     text.uniq!
-    logger.info text.sort.join("\n")
     File.open(File.join(RAILS_ROOT, 'tmp', "#{id}.dot"), 'w') do |f|
       f << text.join("\n")
     end

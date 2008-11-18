@@ -16,4 +16,8 @@ class Neighbour < ActiveRecord::Base
     Country.find(country_id).region == Country.find(neighbour_id).region
   end
 
+  def to_dot
+    [country.label, neighbour.label].sort.join(' -- ') + " [color=white];"
+  end
+
 end
