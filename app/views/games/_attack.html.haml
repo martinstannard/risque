@@ -17,8 +17,7 @@
             %option Please choose
             - @game_player.armed_countries.each do |c|
               %option{:value => c.id}
-                Country
-                = c.id
+                = c.name
           
         %span#attack_target
 
