@@ -5,6 +5,7 @@ class World < ActiveRecord::Base
   after_create :generate_regions
 
   @@colours = %w[lightblue red green orange yellow pink blue violet]
+  @@shapes = %w[box polygon ellipse trapezium parallelogram house hexagon pentagon]
 
   def self.begat
     World.destroy_all
@@ -15,30 +16,32 @@ class World < ActiveRecord::Base
 
   def graph(options = {})
     options[:mode] ||= :region
-    text = ["digraph world {"]
+    text = ["graph world {"]
     text << "graph [fontname = \"Helvetica\","
-    text << "fontsize = 30,"
-    text << "ratio = 0.5]"
+    text << "fontsize = 30, overlap = false, ratio = 0.5]"
     regions.each do |region|
-      text << " node[style=filled];\n"
-      text << "subgraph #{region.label}{\n"
+      text << "subgraph #{region.label}{"
+      text << " node [style=\"filled, bold, rounded\", border=\"black\"];"
       region.internal_borders.each do |n|
         c = n.country
-        text << "#{c.label} -> #{n.neighbour.label};\n"
-        text << "#{c.label} [shape=rectangle,color=#{c.colour(options[:mode])},style=filled];\n"
+        edges = [c.label, n.neighbour.label].sort
+        text << edges.join(' -- ') + ";"
+        text << "#{c.label} [shape=#{region.shape}, color=#{c.colour(options[:mode])},style=filled];"
       end
       text << "label=\"#{region.label}a\";\ncolor=blue\n}\n"
       region.external_borders.each do |n|
         c = n.country
-        text << "#{c.label} -> #{n.neighbour.label};\n"
-        text << "#{c.label} [shape=rectangle,color=#{c.colour(options[:mode])},style=filled];\n"
+        text << "#{c.label} -- #{n.neighbour.label};\n"
+        text << "#{c.label} [shape=#{region.shape}, color=#{c.colour(options[:mode])},style=filled];\n"
       end
     end
     text << "}\n"
-    File.open("#{id}.dot", 'w') do |f|
-      f << text.uniq.join("\n")
+    text.uniq!
+    logger.info text.sort.join("\n")
+    File.open(File.join(RAILS_ROOT, 'tmp', "#{id}.dot"), 'w') do |f|
+      f << text.join("\n")
     end
-    `dot -Tpng -Gsize=12,12 -o#{File.join(RAILS_ROOT, 'public', 'images', id.to_s)}.png "#{id}.dot"` unless RAILS_ENV == 'testing'
+    `dot -Tpng -Gsize=12,12 -o#{File.join(RAILS_ROOT, 'public', 'images', id.to_s)}.png #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
   end
 
   def award_armies(game_player)
@@ -55,8 +58,9 @@ class World < ActiveRecord::Base
   def generate_regions(options = {})
     options[:min] ||= 2
     options[:max] ||= 4
+    shapes = @@shapes.dup.sort_by { rand }
     (rand(options[:max] - options[:min]) + options[:min]).times do |t|
-      regions << Region.create(:name => "region_#{t}", :colour => @@colours[t])
+      regions << Region.create(:name => "region_#{t}", :colour => @@colours[t], :shape => shapes.pop)
     end
     create_borders
   end
