@@ -5,11 +5,9 @@ class Country < ActiveRecord::Base
   has_one :game_player_country
   has_one :game_player, :through => :game_player_country
 
-  @@colours = %w[lightblue red green orange yellow pink blue violet]
-
   def label
-    label = "Country_#{id}_" 
-    label << "#{game_player_country.armies}_armies" unless game_player_country.nil?
+    label = name.dup.gsub(' ', '-')
+    label << "_#{game_player_country.armies}_armies" unless game_player_country.nil?
     logger.info label
     label
   end
@@ -47,7 +45,7 @@ class Country < ActiveRecord::Base
   end
 
   def colour(mode)
-    mode == :region ? region.colour : @@colours[game_player.player_id % 4]
+    mode == :region ? region.colour : colours(game_player.player_id % 4)
   end
 
   def battle_strengths(attacker_dice, defender)

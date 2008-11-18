@@ -17,8 +17,7 @@
           %select{:id => "country_id"}
             - @game_player.countries.each do |c|
               %option{:value => c.id}
-                Country
-                = c.id
+                = c.name
         %li
           %label Available armies
           %select{:id => "armies"}
