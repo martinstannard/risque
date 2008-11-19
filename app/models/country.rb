@@ -72,6 +72,10 @@ class Country < ActiveRecord::Base
     attack_die > defence_die
   end
 
+  def deploy(army_count)
+    update_attribute(:armies, armies + army_count)
+  end
+
   protected
 
   def dice

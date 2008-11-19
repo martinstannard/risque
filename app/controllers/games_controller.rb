@@ -92,31 +92,8 @@ class GamesController < ApplicationController
     end
   end
 
-  # def allocate_armies
-  #   @game_player_country = GamePlayerCountry.find(:first, :conditions =>["game_player_id = ? and country_id = ?",params[:game_player_id],params[:country_id]])
-  #   @game_player_country.armies += params[:armies].to_i
-  #   @game_player_country.save
-  #   @game_player = @game_player_country.game_player
-  #   @game_player.armies_to_allocate -= params[:armies].to_i
-  #   @game_player.save
-  #   @game = @game_player.game
-  #   @game_player = @game_player.game.get_game_player
-  #   @game.world.graph(:mode => :player)
-  #   if @game_player.nil? && @game.is_allocation_round?
-  #     @game_player = @game.game_players.find(:first,:order => "id ASC")
-  #     @game.is_allocation_round = false
-  #     @game.save!
-  #     logger.info("going to attack...")
-  #     render :partial => "attack", :layout => false
-  #   else
-  #     logger.info("still allocating...")
-  #     render :partial => "allocate", :layout => false
-  #   end
-  # end
-
   def map
     game = Game.find(params[:id])
-    game.world.graph(:mode => :player)
     send_data(`cat #{File.join(RAILS_ROOT, 'public', 'images', game.world_id.to_s)}.png`,
               :type => 'image/png', :disposition => 'inline') 
   end

@@ -1,6 +1,6 @@
 class World < ActiveRecord::Base
 
-  has_many :regions, :dependent => :destroy
+  has_many :regions, :dependent => :destroy, :include => :countries
 
   after_create :generate_regions
 

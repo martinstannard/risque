@@ -1,3 +1,5 @@
+require 'faker'
+
 Sham.name { Faker::Name.first_name }
 
 Game.blueprint do
@@ -18,10 +20,13 @@ end
 
 Country.blueprint do
   name { Sham.name }
+  armies { 0 }
+  game_player { GamePlayer.make }
 end
 
 GamePlayer.blueprint do
   player { Player.make }
+  colour { 'red' }
 end
 
 GamePlayerCountry.blueprint do

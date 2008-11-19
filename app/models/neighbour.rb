@@ -1,7 +1,7 @@
 class Neighbour < ActiveRecord::Base
 
-  belongs_to :country
-  belongs_to :neighbour, :class_name => 'Country'
+  belongs_to :country, :include => :region
+  belongs_to :neighbour, :class_name => 'Country', :include => :region
 
   def self.create_borders(country_id, neighbour_id)
     Neighbour.create(:country_id => country_id, :neighbour_id => neighbour_id) unless border_exists?(country_id, neighbour_id)
