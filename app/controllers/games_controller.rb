@@ -25,20 +25,20 @@ class GamesController < ApplicationController
   end
 
   def get_neighbours
-    @neighbours = Country.find(params[:country_id]).neighbours
-    @game_player_country = GamePlayerCountry.find(:first, :conditions =>["game_player_id = ? and country_id = ?",params[:game_player_id],params[:country_id]])
-    @game_player = @game_player_country.game_player
+    @country = Country.find(params[:country_id])
+    @neighbours = @country.neighbours
+    @game_player = @country.game_player
     render :partial => "attack_target", :layout => false
   end
 
   def attack
     @game = Game.find(params[:game_id])
     @game_player = GamePlayer.find(params[:game_player_id])
-    @game_player_attacking_country = GamePlayerCountry.find(:first, :conditions =>["country_id = ?",params[:attacker_country_id]])
-    @game_player_target_country = GamePlayerCountry.find(:first, :conditions =>["country_id = ?",params[:target_country_id]])
+    @attacking_country = Country.find(params[:attacker_country_id])
+    @target_country = Country.find(params[:target_country_id])
     @armies = params[:armies].to_i
     
-    report = @game_player_attacking_country.country.attack(@game_player_target_country.country,@armies)
+    report = @attacking_country.attack(@target_country, @armies)
     flash[:notice] = report
     logger.info report
     @game.world.graph(:mode => :player)
@@ -59,13 +59,10 @@ class GamesController < ApplicationController
   end
 
   def allocate_armies
-    @game_player_country = GamePlayerCountry.find(:first, :conditions =>["game_player_id = ? and country_id = ?",params[:game_player_id],params[:country_id]])
-    @game_player_country.armies += params[:armies].to_i
-    @game_player_country.save
-
-    @game_player = @game_player_country.game_player
-    @game_player.armies_to_allocate -= params[:armies].to_i
-    @game_player.save
+    @game_player = GamePlayer.find(params[:game_player_id])
+    @country = Country.find(params[:country_id])
+    @country.add_armies(params[:armies].to_i)
+    @game_player.add_armies(-params[:armies].to_i)
 
     @game = @game_player.game
     @game.world.graph(:mode => :player)

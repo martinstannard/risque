@@ -8,7 +8,7 @@
 %li
   %label Armies to attack with
   %select{:id => "armies"}
-    - (@game_player_country.armies - 1).times do |t|
+    - (@country.armies - 1).times do |t|
       %option
         = t+1
 

@@ -1,3 +1,14 @@
+# == Schema Information
+# Schema version: 20081119013232
+#
+# Table name: worlds
+#
+#  id         :integer(4)      not null, primary key
+#  name       :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class World < ActiveRecord::Base
 
   has_many :regions, :dependent => :destroy, :include => :countries

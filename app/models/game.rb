@@ -1,3 +1,17 @@
+# == Schema Information
+# Schema version: 20081119013232
+#
+# Table name: games
+#
+#  id                  :integer(4)      not null, primary key
+#  current_player      :integer(4)
+#  created_at          :datetime
+#  updated_at          :datetime
+#  world_id            :integer(4)
+#  is_allocation_round :integer(4)      default(1)
+#  player_list         :string(255)
+#
+
 class Game < ActiveRecord::Base
   
   has_many :game_players, :dependent => :destroy
@@ -31,14 +45,15 @@ class Game < ActiveRecord::Base
     countries.in_groups_of(game_players.size).each do |group|
       group.each_with_index do |country,index|
         next if country.nil?
-        GamePlayerCountry.create!(:game_player_id => game_players[index].id,:country_id => country.id, :armies => 1)
+        country.update_attributes({:game_player_id => game_players[index].id, :armies => 1})
       end
     end
   end
   
   def allocate_initial_armies
+    max_countries = game_players.inject(0) {|max, gp| gp.countries.size > max ? gp.countries.size : max }
     game_players.each do |gp|
-      gp.armies_to_allocate = gp.game_player_countries.count
+      gp.armies_to_allocate = max_countries
       gp.save
     end
   end

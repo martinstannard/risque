@@ -1,3 +1,18 @@
+# == Schema Information
+# Schema version: 20081119013232
+#
+# Table name: regions
+#
+#  id         :integer(4)      not null, primary key
+#  world_id   :integer(4)
+#  name       :string(255)
+#  bonus      :integer(4)
+#  created_at :datetime
+#  updated_at :datetime
+#  colour     :string(255)     default("")
+#  shape      :string(255)
+#
+
 class Region < ActiveRecord::Base
 
   belongs_to :world

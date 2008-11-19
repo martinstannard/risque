@@ -1,3 +1,15 @@
+# == Schema Information
+# Schema version: 20081119013232
+#
+# Table name: neighbours
+#
+#  id           :integer(4)      not null, primary key
+#  country_id   :integer(4)
+#  neighbour_id :integer(4)
+#  created_at   :datetime
+#  updated_at   :datetime
+#
+
 class Neighbour < ActiveRecord::Base
 
   belongs_to :country, :include => :region
