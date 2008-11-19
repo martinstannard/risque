@@ -18,9 +18,13 @@ class Country < ActiveRecord::Base
 
   def attack(target, attacker_dice = 1, defender_dice = 1)
     strengths = battle_strengths(attacker_dice, target)
+    logger.info "battle_strengths [#{strengths}]"
     results = roller(*strengths)
     attackers_left = kill_armies(target, results)
-    if takeover(target, attackers_left)
+    logger.info "attackers_left [#{attackers_left}]"
+    invaders = attacker_dice - (strengths[0] - attackers_left)
+    logger.info "invading with [#{invaders}]"
+    if takeover(target, invaders)
       return "You defeated the enemy. You have overrun their territory."
     else
       return "You could not defeat the infidels - better luck next time."
@@ -34,11 +38,12 @@ class Country < ActiveRecord::Base
     results.find_all { |r| r }.size
   end
 
-  def takeover(target, attackers_left)
+  def takeover(target, invaders)
     # has the target been vanquished
     if target.game_player_country.armies == 0
       target.game_player_country.update_attribute(:game_player_id, self.game_player.id)
-      target.game_player_country.update_attribute(:armies, attackers_left)
+      target.game_player_country.add_armies(invaders)
+      game_player_country.add_armies(-invaders)
       return true
     end
     false
@@ -52,19 +57,23 @@ class Country < ActiveRecord::Base
 
   def battle_strengths(attacker_dice, defender)
     target_armies = defender.game_player_country.armies
-    case attacker_dice
-    when (0..target_armies)
-      return [attacker_dice, attacker_dice - 1]
-    else 
+    if attacker_dice <= target_armies
+      return [attacker_dice, (attacker_dice == 1) ? attacker_dice : attacker_dice - 1]
+    else
       return [target_armies + 1, target_armies]
     end
   end
 
   def roller(attacker_rolls = 1, defender_rolls = 1)
-    attack_die = (0...attacker_rolls).collect { |r| dice }.sort[0...defender_rolls].flatten
-    defend_die = (0...defender_rolls).collect { |r| dice }.sort.flatten
+    attack_die = (0...attacker_rolls).collect { |r| dice }.sort.reverse
+    #.sort.reverse[0...defender_rolls].flatten
+    defend_die = (0...defender_rolls).collect { |r| dice }.sort.reverse
+    logger.info "#{attack_die.join(',')} #{defend_die.join(',')}"
+    attack_die = attack_die[0...defend_die.size]
+    logger.info "#{attack_die.join(',')} #{defend_die.join(',')}"
     results = []
-    defender_rolls.times { |r| results << (attacker_wins?(attack_die[r], defend_die[r])) }
+    defend_die.size.times { |r| results << (attacker_wins?(attack_die[r], defend_die[r])) }
+    logger.info results
     results
   end
 
