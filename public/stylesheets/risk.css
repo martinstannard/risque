@@ -5,7 +5,7 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", Verdana, sans-serif;
 }
 .container {
-  background-color: #f0f0e8;
+  /*background-color: #f0f0e8;*/
   padding: .5em 0px 6em 10px; 
   position: relative;
 }
@@ -60,4 +60,30 @@ div#map {
 
 div#map img {
   margin: 25px auto;
+}
+
+.red {
+  color: Red;
+}
+
+.green {
+  color: Lime;
+}
+.lightblue {
+  color: LightSkyBlue;
+}
+.orange {
+  color: Orange;
+}
+.yellow {
+  color: Yellow;
+}
+.pink {
+  color: Pink;
+}
+.blue {
+  color: Blue;
+}
+.violet {
+  color: Violet;
 }

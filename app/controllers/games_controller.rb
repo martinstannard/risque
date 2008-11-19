@@ -9,6 +9,7 @@ class GamesController < ApplicationController
   
   def create
     g = Game.create
+    g.world.graph
     redirect_to game_path(g)
     return false 
   end
