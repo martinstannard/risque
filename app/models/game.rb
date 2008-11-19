@@ -12,6 +12,7 @@ class Game < ActiveRecord::Base
     World.destroy_all
     self.world = World.begat
     self.players << Player.find(:all,:limit => 4).sort_by{ rand }
+    self.colourise
     self.allocate_countries
     self.allocate_initial_armies
     self.current_player = self.game_players.first
@@ -69,6 +70,11 @@ class Game < ActiveRecord::Base
 
   def graph
     world.graph
+  end
+
+  def colourise
+    colours = SimpleConfig.for(:application).colours.dup.sort_by {rand}
+    game_players.each { |gp| gp.update_attribute(:colour, colours.pop) }
   end
 
 end

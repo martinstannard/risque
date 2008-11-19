@@ -1,63 +1,63 @@
 body {
-	margin: 0;
-	background-color: #000;
-	color: #333;
-	font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", Verdana, sans-serif;
-	}
+  margin: 0;
+  background-color: #000;
+  color: #333;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", Verdana, sans-serif;
+}
 .container {
-	background-color: #f0f0e8;
-	padding: .5em 0px 6em 10px; 
-	position: relative;
-	}
+  background-color: #f0f0e8;
+  padding: .5em 0px 6em 10px; 
+  position: relative;
+}
 a { 
-	color: #bf0000; text-decoration: none; outline: none;
-	}
+  color: #bf0000; text-decoration: none; outline: none;
+}
 a:focus, a:hover {
-	color: #f00; text-decoration: underline;
-	}
+  color: #f00; text-decoration: underline;
+}
 
 h1 {
-	background-color: #600;
-	padding: .5em 1em .5em 1em;
-	color: #fff;
+  background-color: #600;
+  padding: .5em 1em .5em 1em;
+  color: #fff;
 }
 
 h2 {
-	font-weight: bold;
+  font-weight: bold;
 }
 
-	h2 span {
-		font-weight: normal;
-		margin-left: 2em;
-	}
-	h2 span.notice {
-		margin-left: 2em;
-		font-weight: bold;
-		color: green !important;
-	}
+h2 span {
+  font-weight: normal;
+  margin-left: 2em;
+}
+h2 span.notice {
+  margin-left: 2em;
+  font-weight: bold;
+  color: green !important;
+}
 
 div#game-console {
-	padding: .5em 1em .5em 1em;
-	background-color: #ddd;
+  padding: .5em 1em .5em 1em;
+  background-color: #ddd;
 }
 
-	div#game-console p {
-		font-weight: bold;
-	}
+div#game-console p {
+  font-weight: bold;
+}
 
-	div#game-console ol {
-		list-style: none;
-	}
-	
-	div#game-console li {
-		display: inline;
-		margin-right: 25px;
-	}
-	
+div#game-console ol {
+  list-style: none;
+}
+
+div#game-console li {
+  display: inline;
+  margin-right: 25px;
+}
+
 div#map {
-	width: 100%;
+  width: 100%;
 }
 
-	div#map img {
-		margin: 25px auto;
-	}
+div#map img {
+  margin: 25px auto;
+}

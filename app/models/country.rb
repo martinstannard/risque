@@ -45,7 +45,9 @@ class Country < ActiveRecord::Base
   end
 
   def colour(mode)
-    mode == :region ? region.colour : colours(game_player.player_id % 4)
+    return region.colour if mode == :region
+    return game_player.colour if game_player
+    'white'
   end
 
   def battle_strengths(attacker_dice, defender)

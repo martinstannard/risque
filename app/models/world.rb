@@ -10,7 +10,6 @@ class World < ActiveRecord::Base
   def self.begat
     World.destroy_all
     w = World.create
-    w.graph
     w
   end
 

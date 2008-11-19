@@ -17,7 +17,11 @@ class Neighbour < ActiveRecord::Base
   end
 
   def to_dot
-    [country.label, neighbour.label].sort.join(' -- ') + " [color=white];"
+    [country.label, neighbour.label].sort.join(' -- ') + " [color=#{colour},style=bold];"
+  end
+
+  def colour
+    (country.game_player.player.name == neighbour.game_player.player.name) ? country.game_player.colour : 'white'
   end
 
 end
