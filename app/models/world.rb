@@ -35,9 +35,8 @@ class World < ActiveRecord::Base
       text << "  node [style=\"filled, bold, rounded\", border=\"black\"];"
       region.countries.each { |c| text << c.to_dot }
       text << "label=\"#{region.label}a\";\ncolor=blue\n}\n"
-      region.internal_borders.each { |border| text << border.to_dot }
-      region.external_borders.each { |border| text << border.to_dot }
     end
+    regions.collect {|r| r.countries}.flatten.each { |c| c.neighbours.each {|b| text << b.to_dot } }
     text << "}\n"
     text.uniq!
     File.open(File.join(RAILS_ROOT, 'tmp', "#{id}.dot"), 'w') do |f|
