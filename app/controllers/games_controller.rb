@@ -4,16 +4,16 @@ class GamesController < ApplicationController
   end
 
   def show
-    
+    @game = Game.find(params[:id])
   end
-  
+
   def create
     g = Game.create
     g.world.graph
     redirect_to game_path(g)
     return false 
   end
-  
+
   def game
     @game = Game.find(params[:id])
     @game_player = @game.current_player
@@ -37,7 +37,7 @@ class GamesController < ApplicationController
     @attacking_country = Country.find(params[:attacker_country_id])
     @target_country = Country.find(params[:target_country_id])
     @armies = params[:armies].to_i
-    
+
     report = @attacking_country.attack(@target_country, @armies)
     flash[:notice] = report
     logger.info report
@@ -50,7 +50,7 @@ class GamesController < ApplicationController
     @game = @game_player.game
     @game_player = GamePlayer.find(@game.get_next_player)
 
-    
+
     #TODO avoid the magic number of how many armies you get per turn.
     @game_player.add_armies(5)
     @game.world.award_bonuses(@game_player)
@@ -92,8 +92,16 @@ class GamesController < ApplicationController
 
   def map
     game = Game.find(params[:id])
-    send_data(`cat #{File.join(RAILS_ROOT, 'public', 'images', game.world_id.to_s)}.png`,
-              :type => 'image/png', :disposition => 'inline') 
+    respond_to do |format|
+      format.html {
+        send_data(`cat #{File.join(RAILS_ROOT, 'public', 'images', game.world_id.to_s)}.png`,
+                  :type => 'image/png', :disposition => 'inline') 
+      }
+      format.js do
+        #world.parse.to_json
+      end
+    end
+
   end
 
 end

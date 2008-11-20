@@ -15,9 +15,6 @@ class World < ActiveRecord::Base
 
   after_create :generate_regions
 
-  @@colours = %w[lightblue red green orange yellow pink blue violet]
-  @@shapes = %w[box polygon ellipse trapezium parallelogram house hexagon pentagon]
-
   def self.begat
     World.destroy_all
     w = World.create
@@ -25,7 +22,39 @@ class World < ActiveRecord::Base
   end
 
   def graph(options = {})
-    options[:mode] ||= :region
+    to_dot
+    parse
+    `dot -Tpng -Gsize=12,12 -o#{File.join(RAILS_ROOT, 'public', 'images', id.to_s)}.png #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
+  end
+
+  def award_armies(game_player)
+    game_player.add_armies(game_player.countries.size / 3)
+    #TODO award_bonuses game_player
+  end
+
+
+  def parse
+    to_dot
+    out = File.join(RAILS_ROOT, 'tmp', id.to_s) + '.txt'
+    `dot -Tplain -Gsize=12,12 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
+
+    text = 'function draw_map() {var paper = Raphael("map", 800, 600);'
+    i  = 0
+    File.open(out).each do |line|
+      line =~ /node ".+"  (\d+\.\d+) (\d+\.\d+)/
+        if $1
+          text << %Q[var c_#{i} = paper.circle(#{($1.to_f*50).to_i}, #{($2.to_f*50).to_i}, 10); c_#{i}.attr("fill", "#f00"); c_#{i}.attr("stroke", "#fff");]
+
+          i += 1
+        end
+    end
+    text << '}'
+    text
+  end
+
+  protected
+
+  def to_dot
     text = ["graph world {"]
     text << "graph [fontname = \"Helvetica\","
     text << "bgcolor=black, nodesep=.05, fontsize = 50, overlap = scale, ratio = 0.5, labelfontsize=30]"
@@ -42,15 +71,7 @@ class World < ActiveRecord::Base
     File.open(File.join(RAILS_ROOT, 'tmp', "#{id}.dot"), 'w') do |f|
       f << text.join("\n")
     end
-    `dot -Tpng -Gsize=12,12 -o#{File.join(RAILS_ROOT, 'public', 'images', id.to_s)}.png #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
   end
-
-  def award_armies(game_player)
-    game_player.add_armies(game_player.countries.size / 3)
-    #TODO award_bonuses game_player
-  end
-
-  protected
 
   def award_bonuses(game_player)
     regions.each { |r| r.award_bonuses(game_player) }

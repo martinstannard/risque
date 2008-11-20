@@ -7,7 +7,7 @@ CREATE TABLE `countries` (
   `armies` int(11) default '0',
   `game_player_id` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6659 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `game_player_countries` (
   `id` int(11) NOT NULL auto_increment,
@@ -17,7 +17,7 @@ CREATE TABLE `game_player_countries` (
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=582 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `game_players` (
   `id` int(11) NOT NULL auto_increment,
@@ -29,7 +29,7 @@ CREATE TABLE `game_players` (
   `completed_initial_allocation` int(11) default '0',
   `colour` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `games` (
   `id` int(11) NOT NULL auto_increment,
@@ -40,7 +40,7 @@ CREATE TABLE `games` (
   `is_allocation_round` int(11) default '1',
   `player_list` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `neighbours` (
   `id` int(11) NOT NULL auto_increment,
@@ -49,7 +49,7 @@ CREATE TABLE `neighbours` (
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18107 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `players` (
   `id` int(11) NOT NULL auto_increment,
@@ -57,7 +57,7 @@ CREATE TABLE `players` (
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `regions` (
   `id` int(11) NOT NULL auto_increment,
@@ -69,7 +69,7 @@ CREATE TABLE `regions` (
   `colour` varchar(255) default '',
   `shape` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=738 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `schema_migrations` (
   `version` varchar(255) NOT NULL,
@@ -82,7 +82,7 @@ CREATE TABLE `worlds` (
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8;
 
 INSERT INTO schema_migrations (version) VALUES ('20081114085627');
 

@@ -6,3 +6,5 @@
   })
 %div#map
   = image_tag("/games/map/#{params[:id]}", :id => "map-image")
+%script
+  = @game.world.parse
