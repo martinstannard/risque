@@ -41,9 +41,9 @@ class World < ActiveRecord::Base
     text = 'function draw_map() {var paper = Raphael("map", 800, 600);'
     i  = 0
     File.open(out).each do |line|
-      line =~ /node ".+"  (\d+\.\d+) (\d+\.\d+)/
+      line =~ /node (".+")  (\d+\.\d+) (\d+\.\d+)/
         if $1
-          text << %Q[var c_#{i} = paper.circle(#{($1.to_f*50).to_i}, #{($2.to_f*50).to_i}, 10); c_#{i}.attr("fill", "#f00"); c_#{i}.attr("stroke", "#fff");]
+          text << %Q[var c_#{i} = paper.circle(#{($2.to_f*50).to_i}, #{($3.to_f*50).to_i}, 10); c_#{i}.attr("fill", "#f00"); c_#{i}.attr("stroke", "#fff");]
 
           i += 1
         end
