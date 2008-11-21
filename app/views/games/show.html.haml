@@ -4,7 +4,6 @@
   $.post("/games/game/" + game_id,function(data) {
   $("#out").html(data);
   })
-%div#map
-  = image_tag("/games/map/#{params[:id]}", :id => "map-image")
+#holder
 %script
-  = @game.world.parse
+  = @game.world.to_js

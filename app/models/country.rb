@@ -15,7 +15,7 @@
 class Country < ActiveRecord::Base
 
   belongs_to :region
-  belongs_to :game_player
+  belongs_to :game_player, :include => :colour
   has_many :neighbours, :dependent => :destroy
 
   def label
@@ -26,7 +26,7 @@ class Country < ActiveRecord::Base
   end
 
   def to_dot(options = {})
-   "#{label} [shape=#{region.shape}, color=#{colour(options[:mode])},style=filled];"
+   "#{label} [color=white,style=filled];"
   end
 
   def attack(target, attacker_dice = 1, target_dice = 1)
@@ -49,7 +49,6 @@ class Country < ActiveRecord::Base
     return game_player.colour if game_player
     'white'
   end
-
 
   def add_armies(army_count)
     update_attribute(:armies, armies + army_count)
@@ -81,6 +80,7 @@ class Country < ActiveRecord::Base
   def attacker_wins?(attack_die, defence_die)
     attack_die > defence_die
   end
+
   def kill_armies(target, results)
     results.each do |r|
       r ? target.add_armies(-1) : add_armies(-1)

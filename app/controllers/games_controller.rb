@@ -9,7 +9,7 @@ class GamesController < ApplicationController
 
   def create
     g = Game.create
-    g.world.graph
+    #g.world.graph
     redirect_to game_path(g)
     return false 
   end
@@ -41,7 +41,7 @@ class GamesController < ApplicationController
     report = @attacking_country.attack(@target_country, @armies)
     flash[:notice] = report
     logger.info report
-    @game.world.graph(:mode => :player)
+    #@game.world.graph(:mode => :player)
     render :partial => "attack", :layout => false
   end
 
@@ -65,7 +65,7 @@ class GamesController < ApplicationController
     @game_player.add_armies(-params[:armies].to_i)
 
     @game = @game_player.game
-    @game.world.graph(:mode => :player)
+    #@game.world.graph(:mode => :player)
 
     if @game_player.completed_initial_allocation? && @game_player.armies_to_allocate <= 0
       logger.info("going to attack...")

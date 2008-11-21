@@ -88,8 +88,8 @@ class Game < ActiveRecord::Base
   end
 
   def colourise
-    colours = SimpleConfig.for(:application).colours.dup.sort_by {rand}
-    game_players.each { |gp| gp.update_attribute(:colour, colours.pop) }
+    colours = Colour.random
+    game_players.each { |gp| gp.update_attribute(:colour_id, colours.pop.id) }
   end
 
 end

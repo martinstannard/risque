@@ -62,6 +62,14 @@ div#map img {
   margin: 25px auto;
 }
 
+#holder {
+  height: 800px;
+  left: 50%;
+  margin: 0px 250px 0 -400px;
+  position: relative;
+  top: 50%;
+  width: 600px;
+}
 .red {
   color: Red;
 }

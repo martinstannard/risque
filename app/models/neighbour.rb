@@ -29,7 +29,7 @@ class Neighbour < ActiveRecord::Base
   end
 
   def to_dot
-    [country.label, neighbour.label].sort.join(' -- ') + " [color=#{colour},style=bold];"
+    [country.label, neighbour.label].sort.join(' -- ') + " [style=bold];"
   end
 
   def colour

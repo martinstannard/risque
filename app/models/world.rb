@@ -23,7 +23,6 @@ class World < ActiveRecord::Base
 
   def graph(options = {})
     to_dot
-    parse
     `dot -Tpng -Gsize=12,12 -o#{File.join(RAILS_ROOT, 'public', 'images', id.to_s)}.png #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
   end
 
@@ -32,27 +31,40 @@ class World < ActiveRecord::Base
     #TODO award_bonuses game_player
   end
 
-
-  def parse
-    to_dot
-    out = File.join(RAILS_ROOT, 'tmp', id.to_s) + '.txt'
-    `dot -Tplain -Gsize=12,12 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
-
-    text = 'function draw_map() {var paper = Raphael("map", 800, 600);'
-    i  = 0
-    File.open(out).each do |line|
-      line =~ /node (".+")  (\d+\.\d+) (\d+\.\d+)/
-        if $1
-          text << %Q[var c_#{i} = paper.circle(#{($2.to_f*50).to_i}, #{($3.to_f*50).to_i}, 10); c_#{i}.attr("fill", "#f00"); c_#{i}.attr("stroke", "#fff");]
-
-          i += 1
-        end
+  def to_js
+    text = 'function draw_map() {var paper = Raphael("holder", 800, 800);'
+    countries.each_with_index do |c, i|
+      text << %Q[var c_#{i} = paper.circle(#{c.x_position}, #{c.y_position}, #{c.armies * 5 + 5}); c_#{i}.attr("fill", "##{c.game_player.colour.hex}"); c_#{i}.attr("stroke", "#fff");]
+      text << %Q[var attr = {"font": '14px "Verdana"', opacity: 0.5}; paper.text(#{c.x_position}, #{c.y_position}, "#{c.name}").attr(attr).attr("fill", "#0f0");]
     end
     text << '}'
     text
   end
 
   protected
+
+  def countries
+    regions.collect { |r| r.countries }.flatten
+  end
+
+  def set_coordinates
+    to_dot
+    out = File.join(RAILS_ROOT, 'tmp', id.to_s) + '.txt'
+    `dot -Tplain -Gsize=12,12 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
+
+    i  = 0
+    File.open(out).each do |line|
+      line =~ /node (".+")  (\d+\.\d+) (\d+\.\d+) \d+\.\d+ \d+\.\d+ "(.+) (\d+)/
+        if $1
+          x = ($2.to_f*50).to_i
+          y = ($3.to_f*50).to_i
+          name = $4
+          c = Country.find_by_name(name)
+          c.update_attributes(:x_position => x, :y_position => y)
+          i += 1
+        end
+    end
+  end
 
   def to_dot
     text = ["graph world {"]
@@ -81,11 +93,13 @@ class World < ActiveRecord::Base
     options[:min] ||= 2
     options[:max] ||= 4
     (rand(options[:max] - options[:min]) + options[:min]).times do |t|
-      regions << Region.create(:name => "region_#{t}", :colour => colours(t), :shape => shapes(t))
+      regions << Region.create(:name => "region_#{t}")
     end
     countries = SimpleConfig.for(:application).countries.dup.sort_by { rand }
     regions.collect {|r| r.countries }.flatten.each_with_index {|c, i| c.update_attribute(:name, countries[i]) }
     create_borders
+    to_dot
+    set_coordinates
   end
 
   def create_borders
