@@ -1,3 +1,12 @@
+CREATE TABLE `colours` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `hex` varchar(255) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `countries` (
   `id` int(11) NOT NULL auto_increment,
   `region_id` int(11) default NULL,
@@ -6,8 +15,10 @@ CREATE TABLE `countries` (
   `updated_at` datetime default NULL,
   `armies` int(11) default '0',
   `game_player_id` int(11) default NULL,
+  `x_position` int(11) default NULL,
+  `y_position` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6659 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `game_player_countries` (
   `id` int(11) NOT NULL auto_increment,
@@ -17,7 +28,7 @@ CREATE TABLE `game_player_countries` (
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=582 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `game_players` (
   `id` int(11) NOT NULL auto_increment,
@@ -27,9 +38,9 @@ CREATE TABLE `game_players` (
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   `completed_initial_allocation` int(11) default '0',
-  `colour` varchar(255) default NULL,
+  `colour_id` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `games` (
   `id` int(11) NOT NULL auto_increment,
@@ -40,7 +51,7 @@ CREATE TABLE `games` (
   `is_allocation_round` int(11) default '1',
   `player_list` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `neighbours` (
   `id` int(11) NOT NULL auto_increment,
@@ -49,7 +60,7 @@ CREATE TABLE `neighbours` (
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18107 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `players` (
   `id` int(11) NOT NULL auto_increment,
@@ -57,7 +68,7 @@ CREATE TABLE `players` (
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `regions` (
   `id` int(11) NOT NULL auto_increment,
@@ -66,10 +77,9 @@ CREATE TABLE `regions` (
   `bonus` int(11) default NULL,
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
-  `colour` varchar(255) default '',
-  `shape` varchar(255) default NULL,
+  `shape_id` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=738 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `schema_migrations` (
   `version` varchar(255) NOT NULL,
@@ -82,7 +92,7 @@ CREATE TABLE `worlds` (
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO schema_migrations (version) VALUES ('20081114085627');
 
@@ -117,3 +127,11 @@ INSERT INTO schema_migrations (version) VALUES ('20081117124219');
 INSERT INTO schema_migrations (version) VALUES ('20081118021141');
 
 INSERT INTO schema_migrations (version) VALUES ('20081119013232');
+
+INSERT INTO schema_migrations (version) VALUES ('20081121015919');
+
+INSERT INTO schema_migrations (version) VALUES ('20081121020033');
+
+INSERT INTO schema_migrations (version) VALUES ('20081121020331');
+
+INSERT INTO schema_migrations (version) VALUES ('20081121020945');

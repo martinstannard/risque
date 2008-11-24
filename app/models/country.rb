@@ -26,7 +26,7 @@ class Country < ActiveRecord::Base
   end
 
   def to_dot(options = {})
-   "#{label} [color=white,style=filled];"
+   "#{id} [color=white,style=filled];"
   end
 
   def attack(target, attacker_dice = 1, target_dice = 1)

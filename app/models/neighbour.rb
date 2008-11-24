@@ -20,20 +20,22 @@ class Neighbour < ActiveRecord::Base
     Neighbour.create(:country_id => neighbour_id, :neighbour_id => country_id) unless border_exists?(neighbour_id, country_id)
   end
 
-  def self.border_exists?(country_id, neighbour_id)
-    exists?(['country_id = ? AND neighbour_id = ?', country_id, neighbour_id])
-  end
-
   def is_regional?
     Country.find(country_id).region == Country.find(neighbour_id).region
   end
 
   def to_dot
-    [country.label, neighbour.label].sort.join(' -- ') + " [style=bold];"
+    [country_id, neighbour_id].sort.join(' -- ') + " [style=bold];"
   end
+
+  protected
 
   def colour
     (country.game_player.player.name == neighbour.game_player.player.name) ? country.game_player.colour : 'white'
+  end
+
+  def self.border_exists?(country_id, neighbour_id)
+    exists?(['country_id = ? AND neighbour_id = ?', country_id, neighbour_id])
   end
 
 end
