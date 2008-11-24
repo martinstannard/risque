@@ -32,10 +32,10 @@ class World < ActiveRecord::Base
   end
 
   def to_js
-    text = 'function draw_map() {var paper = Raphael("holder", 800, 800);'
+    text = %Q[function draw_map() {var paper = Raphael("holder", 800, 800);\n]
     countries.each_with_index do |c, i|
-      text << %Q[var c_#{i} = paper.circle(#{c.x_position}, #{c.y_position}, #{c.armies * 5 + 5}); c_#{i}.attr("fill", "##{c.game_player.colour.hex}"); c_#{i}.attr("stroke", "#fff");]
-      text << %Q[var attr = {"font": '14px "Verdana"', opacity: 0.5}; paper.text(#{c.x_position}, #{c.y_position}, "#{c.name}").attr(attr).attr("fill", "#0f0");]
+      text << %Q[var c_#{i} = paper.circle(#{c.x_position}, #{c.y_position}, #{c.armies * 5 + 10});\n c_#{i}.attr("fill", "##{c.game_player.colour.hex}");\n c_#{i}.attr("stroke", "#fff");\n]
+      text << %Q[var attr = {"font": '16px "Verdana"', opacity: 0.8};\n paper.text(#{c.x_position}, #{c.y_position}, "#{c.x_position}, #{c.y_position}, #{c.name}").attr(attr).attr("fill", "#fff");\n]
     end
     text << '}'
     text
@@ -51,15 +51,13 @@ class World < ActiveRecord::Base
     to_dot
     out = File.join(RAILS_ROOT, 'tmp', id.to_s) + '.txt'
     `dot -Tplain -Gsize=12,12 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
-
     i  = 0
     File.open(out).each do |line|
-      line =~ /node (".+")  (\d+\.\d+) (\d+\.\d+) \d+\.\d+ \d+\.\d+ "(.+) (\d+)/
+      line =~ /node (\d+)  (\d+\.\d+) (\d+\.\d+)/
         if $1
-          x = ($2.to_f*50).to_i
-          y = ($3.to_f*50).to_i
-          name = $4
-          c = Country.find_by_name(name)
+          x = ($2.to_f*90).to_i
+          y = ($3.to_f*90).to_i
+          c = Country.find($1)
           c.update_attributes(:x_position => x, :y_position => y)
           i += 1
         end
@@ -69,7 +67,7 @@ class World < ActiveRecord::Base
   def to_dot
     text = ["graph world {"]
     text << "graph [fontname = \"Helvetica\","
-    text << "bgcolor=black, nodesep=.05, fontsize = 50, overlap = scale, ratio = 0.5, labelfontsize=30]"
+    text << "bgcolor=black, nodesep=.05, fontsize = 50, overlap = scale, ratio = 0.9, labelfontsize=30]"
 
     regions.each do |region|
       text << "subgraph #{region.label}{"
