@@ -13,11 +13,10 @@ class World < ActiveRecord::Base
 
   has_many :regions, :dependent => :destroy, :include => :countries
 
-  after_create :generate_regions
-
   def self.begat
     World.destroy_all
     w = World.create
+    w.generate_regions
     w
   end
 
@@ -32,13 +31,28 @@ class World < ActiveRecord::Base
   end
 
   def to_js
-    text = %Q[function draw_map() {var paper = Raphael("holder", 800, 800);\n]
+    text = %Q[function draw_map() {var paper = Raphael("holder", 1150, 600);\n]
+    countries.collect { |c| c.neighbours }.flatten.each_with_index do |n, i|
+      text << n.to_js
+    end
     countries.each_with_index do |c, i|
-      text << %Q[var c_#{i} = paper.circle(#{c.x_position}, #{c.y_position}, #{c.armies * 5 + 10});\n c_#{i}.attr("fill", "##{c.game_player.colour.hex}");\n c_#{i}.attr("stroke", "#fff");\n]
-      text << %Q[var attr = {"font": '16px "Verdana"', opacity: 0.8};\n paper.text(#{c.x_position}, #{c.y_position}, "#{c.x_position}, #{c.y_position}, #{c.name}").attr(attr).attr("fill", "#fff");\n]
+      text << c.to_js(i)
     end
     text << '}'
     text
+  end
+
+  def generate_regions(options = {}, country_options = {})
+    options[:min] ||= 2
+    options[:max] ||= 4
+    (rand(options[:max] - options[:min]) + options[:min]).floor.times do |t|
+      regions << Region.create(:name => "region_#{t}")
+      regions[-1].generate_countries(country_options)
+    end
+    countries = SimpleConfig.for(:application).countries.dup.sort_by { rand }
+    regions.collect {|r| r.countries }.flatten.each_with_index {|c, i| c.update_attribute(:name, countries[i]) }
+    create_borders
+    set_coordinates
   end
 
   protected
@@ -50,24 +64,36 @@ class World < ActiveRecord::Base
   def set_coordinates
     to_dot
     out = File.join(RAILS_ROOT, 'tmp', id.to_s) + '.txt'
-    `dot -Tplain -Gsize=12,12 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
+    `neato -Tplain -Gsize=1200,600 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
     i  = 0
+    max_x = max_y = 0.0
     File.open(out).each do |line|
       line =~ /node (\d+)  (\d+\.\d+) (\d+\.\d+)/
         if $1
-          x = ($2.to_f*90).to_i
-          y = ($3.to_f*90).to_i
+          max_x = $2.to_f if $2.to_f > max_x
+          max_y = $3.to_f if $3.to_f > max_y
+        end
+    end
+    scaling_x = 1150.0 / max_x
+    scaling_y = 550.0 / max_y
+    logger.info scaling_x,scaling_y
+    File.open(out).each do |line|
+      line =~ /node (\d+)  (\d+\.\d+) (\d+\.\d+)/
+        if $1
+          x = ($2.to_f * scaling_x).to_i + 25
+          y = ($3.to_f * scaling_y).to_i + 25
           c = Country.find($1)
-          c.update_attributes(:x_position => x, :y_position => y)
+          c.update_attributes({:x_position => x, :y_position => y})
           i += 1
         end
     end
   end
 
+
   def to_dot
     text = ["graph world {"]
     text << "graph [fontname = \"Helvetica\","
-    text << "bgcolor=black, nodesep=.05, fontsize = 50, overlap = scale, ratio = 0.9, labelfontsize=30]"
+    text << "bgcolor=black, nodesep=.05, fontsize = 50, overlap = scale, ratio = 0.5, labelfontsize=30]"
 
     regions.each do |region|
       text << "subgraph #{region.label}{"
@@ -85,19 +111,6 @@ class World < ActiveRecord::Base
 
   def award_bonuses(game_player)
     regions.each { |r| r.award_bonuses(game_player) }
-  end
-
-  def generate_regions(options = {})
-    options[:min] ||= 2
-    options[:max] ||= 4
-    (rand(options[:max] - options[:min]) + options[:min]).times do |t|
-      regions << Region.create(:name => "region_#{t}")
-    end
-    countries = SimpleConfig.for(:application).countries.dup.sort_by { rand }
-    regions.collect {|r| r.countries }.flatten.each_with_index {|c, i| c.update_attribute(:name, countries[i]) }
-    create_borders
-    to_dot
-    set_coordinates
   end
 
   def create_borders

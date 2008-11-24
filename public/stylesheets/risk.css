@@ -63,35 +63,10 @@ div#map img {
 }
 
 #holder {
-  height: 800px;
+  height: 600px;
   left: 50%;
-  margin: 0px 250px 0 -400px;
+  margin: 0px 250px 0 -575px;
   position: relative;
   top: 50%;
-  width: 600px;
-}
-.red {
-  color: Red;
-}
-
-.green {
-  color: Lime;
-}
-.lightblue {
-  color: LightSkyBlue;
-}
-.orange {
-  color: Orange;
-}
-.yellow {
-  color: Yellow;
-}
-.pink {
-  color: Pink;
-}
-.blue {
-  color: Blue;
-}
-.violet {
-  color: Violet;
+  width: 1150;
 }

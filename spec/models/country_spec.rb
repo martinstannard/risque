@@ -1,4 +1,3 @@
-
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Country, "can has armies" do

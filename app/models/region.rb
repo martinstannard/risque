@@ -18,8 +18,6 @@ class Region < ActiveRecord::Base
   belongs_to :world
   has_many :countries, :dependent => :destroy
 
-  after_create :generate_countries
-  
   def label
     name
   end
@@ -27,8 +25,10 @@ class Region < ActiveRecord::Base
   def generate_countries(options = {})
     options[:min] ||= 4
     options[:max] ||= 10
-    (rand(options[:max] - options[:min]) + options[:min]).times do |t|
+    (rand(options[:max] - options[:min]) + options[:min]).floor.times do |t|
       countries << Country.create
+      logger.info "*" * 100
+      logger.info countries.last.inspect
     end
     create_borders
     update_attribute(:bonus, countries.size - 2)
