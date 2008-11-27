@@ -55,6 +55,11 @@ class World < ActiveRecord::Base
     set_coordinates
   end
 
+  def to_svg
+    to_dot
+    out = File.join(RAILS_ROOT, 'public/images', id.to_s) + '.svg'
+    `neato -Tsvg -Gsize=1100,550 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
+  end
   protected
 
   def countries
@@ -88,7 +93,6 @@ class World < ActiveRecord::Base
         end
     end
   end
-
 
   def to_dot
     text = ["graph world {"]

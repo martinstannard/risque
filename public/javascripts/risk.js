@@ -30,4 +30,6 @@ $(document).ready(function() {
 
     draw_map();
 
+    var svg = $('div svg').svg();
+
 });
