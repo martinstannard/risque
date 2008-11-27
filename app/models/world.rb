@@ -74,7 +74,7 @@ class World < ActiveRecord::Base
           max_y = $3.to_f if $3.to_f > max_y
         end
     end
-    scaling_x = 1150.0 / max_x
+    scaling_x = 1000.0 / max_x
     scaling_y = 550.0 / max_y
     logger.info scaling_x,scaling_y
     File.open(out).each do |line|

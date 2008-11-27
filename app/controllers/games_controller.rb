@@ -98,7 +98,7 @@ class GamesController < ApplicationController
                   :type => 'image/png', :disposition => 'inline') 
       }
       format.js do
-        #world.parse.to_json
+        world.to_js
       end
     end
 

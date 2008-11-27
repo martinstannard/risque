@@ -35,7 +35,7 @@ class Neighbour < ActiveRecord::Base
   protected
 
   def colour
-    (country.game_player.player.name == neighbour.game_player.player.name) ? country.game_player.colour.hex : 'fff'
+    (country.game_player.player.name == neighbour.game_player.player.name) ? country.game_player.colour.hex : 'bbb'
   end
 
   def self.border_exists?(country_id, neighbour_id)
