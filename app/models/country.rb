@@ -26,7 +26,7 @@ class Country < ActiveRecord::Base
   end
 
   def to_dot(options = {})
-   "#{id} [color=white,style=filled];"
+    %Q(#{id} [color="#{colour}",style=filled,label="#{name}"];)
   end
 
   def to_js(i = 0)
@@ -51,9 +51,9 @@ class Country < ActiveRecord::Base
     end
   end
 
-  def colour(mode)
-    return region.colour if mode == :region
-    return game_player.colour if game_player
+  def colour(mode = :player)
+    return "##{region.colour.hex}" if mode == :region
+    return "##{game_player.colour.hex}" if game_player
     'white'
   end
 

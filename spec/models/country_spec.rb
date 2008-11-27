@@ -23,3 +23,13 @@ describe Country, "can has armies" do
 
 end
 
+describe Country, "should have a to_svg method" do
+
+  before do
+    @country = Country.make
+  end
+
+  it "should have coordinates" do
+  end
+
+end

@@ -25,17 +25,20 @@ class Neighbour < ActiveRecord::Base
   end
 
   def to_dot
-    [country_id, neighbour_id].sort.join(' -- ') + " [style=bold];"
+    [country_id, neighbour_id].sort.join(' -- ') + %Q![colour="#{colour}",style=bold];!
   end
 
   def to_js
-    %Q[paper.path({stroke: "##{colour}"}).moveTo(#{country.x_position}, #{country.y_position}).lineTo(#{neighbour.x_position}, #{neighbour.y_position});\n]
+    %Q[paper.path({stroke: "#{colour}"}).moveTo(#{country.x_position}, #{country.y_position}).lineTo(#{neighbour.x_position}, #{neighbour.y_position});\n]
   end
 
   protected
 
   def colour
-    (country.game_player.player.name == neighbour.game_player.player.name) ? country.game_player.colour.hex : 'bbb'
+    if country.game_player && (country.game_player.player.name == neighbour.game_player.player.name)
+      return %Q[##{country.game_player.colour.hex}]
+    end
+    "white"
   end
 
   def self.border_exists?(country_id, neighbour_id)

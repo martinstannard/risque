@@ -31,6 +31,7 @@ class Game < ActiveRecord::Base
     self.allocate_initial_armies
     self.current_player = self.game_players.first
     self.player_list = game_players.map{|p| p.id}
+    self.world.to_svg
     self.save
   end
   
