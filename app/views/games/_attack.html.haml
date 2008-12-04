@@ -1,5 +1,5 @@
 %div#game-console
-  %h2{:class => @game_player.colour}
+  %h2{:style => "color:##{@game_player.colour.hex};"}
     = @game_player.player.name
     %span
       Are you ready to kick some arse?

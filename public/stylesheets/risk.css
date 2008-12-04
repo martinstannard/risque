@@ -70,3 +70,10 @@ div#map img {
   top: 50%;
   width: 1150px;
 }
+
+#svgholder {
+	width: 1000px;
+	height: 500px;
+	border: 1px solid #484;
+}
+

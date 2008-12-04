@@ -31,12 +31,12 @@ class World < ActiveRecord::Base
   end
 
   def to_js
-    text = %Q[function draw_map() {var paper = Raphael("holder", 1150, 600);\n]
-    countries.collect { |c| c.neighbours }.flatten.each_with_index do |n, i|
-      text << n.to_js
-    end
+    text = %Q[function draw_map() {paper = Raphael("holder", 1150, 600);\n]
+    #countries.collect { |c| c.neighbours }.flatten.each_with_index do |n,i|
+    #  text << n.to_js(i)
+    #end
     countries.each_with_index do |c, i|
-      text << c.to_js(i)
+      text << c.to_js
     end
     text << '}'
     text
@@ -58,8 +58,9 @@ class World < ActiveRecord::Base
   def to_svg
     to_dot
     out = File.join(RAILS_ROOT, 'public/images', id.to_s) + '.svg'
-    `neato -Tsvg -Gsize=1100,550 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
+    `dot -Tsvg -Gsize=1100,550 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
   end
+
   protected
 
   def countries
@@ -69,7 +70,7 @@ class World < ActiveRecord::Base
   def set_coordinates
     to_dot
     out = File.join(RAILS_ROOT, 'tmp', id.to_s) + '.txt'
-    `neato -Tplain -Gsize=1200,600 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
+    `dot -Tplain -Gsize=1200,600 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
     i  = 0
     max_x = max_y = 0.0
     File.open(out).each do |line|

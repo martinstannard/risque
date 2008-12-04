@@ -25,7 +25,7 @@ class Neighbour < ActiveRecord::Base
   end
 
   def to_dot
-    [country_id, neighbour_id].sort.join(' -- ') + %Q![colour="#{colour}",style=bold];!
+    [country_id, neighbour_id].sort.join(' -- ') + %Q![color="#{colour}",style=bold];!
   end
 
   def to_js

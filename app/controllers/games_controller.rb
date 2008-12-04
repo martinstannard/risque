@@ -101,6 +101,22 @@ class GamesController < ApplicationController
         world.to_js
       end
     end
+  end
+
+  def svg
+    game = Game.find(params[:id])
+    #render :text => game.world.to_svg, :layout => false
+    send_data(`cat #{File.join(RAILS_ROOT, 'public', 'images', game.world_id.to_s)}.svg`,
+              :type => 'image/svg+xml', :disposition => 'inline') 
+  end
+
+  def render_svg
+    game = Game.find(params[:id])
+    #render 
+    #render :json => {:world => game.world.id}.to_json, :callback => 'show'
+    render :update do |page|
+      page.replace_html 'svgholder', :partial => 'svg'
+    end
 
   end
 
