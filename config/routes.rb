@@ -24,6 +24,7 @@ ActionController::Routing::Routes.draw do |map|
         :players => :get
       }
 
+  map.connect 'countries/:id', :controller => 'countries', :action => 'show'
 
   # Sample resource route with options:
   #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }

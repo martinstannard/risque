@@ -21,7 +21,8 @@ function attack(game_id,game_player_id,attacker_country_id, target_country_id,ar
   $.post("/games/attack",{game_id: game_id, game_player_id: game_player_id, attacker_country_id: attacker_country_id, target_country_id: target_country_id, armies: armies,authenticity_token: global_token}, function(data) {
       $("#out").html(data);
       });
-  plot_map();
+  plot_country(attacker_country_id);
+  plot_country(target_country_id);
 }
 
 function draw_svg (game_id) {
@@ -29,6 +30,10 @@ function draw_svg (game_id) {
 }
 
 var map;
+
+function plot_country(country_id) {
+  $.getJSON("/countries/" + country_id, function(data) { map.plotCountry(data)} );
+}
 
 function plot_map() {
   $.getJSON("/games/" + game_id + "/countries", function(data) { map.plot(data)} );
