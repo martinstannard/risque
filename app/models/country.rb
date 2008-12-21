@@ -29,23 +29,6 @@ class Country < ActiveRecord::Base
     %Q(#{id} [color="#{colour}",style=filled,label="#{name}"];)
   end
 
-  def to_js
-      text = %Q[countries[#{id}] = paper.circle(#{x_position}, #{y_position}, #{(Math::log(armies.to_f) + 1) * 10});\n]
-      text << unhighlight
-      text << %Q[var attr = {"font": '12px "Verdana"', opacity: 0.8};\narmies[#{id}] = paper.text(#{x_position}, #{y_position - 20}, "#{name}").attr(attr).attr("fill", "#0f0");\n]
-      text << %Q[var attr = {"font": '20px "Verdana"', opacity: 0.8};\narmies[#{id}] = paper.text(#{x_position}, #{y_position + 7}, "#{armies}").attr(attr).attr("fill", "#fff");\n]
-      text
-  end
-
-  def highlight
-    %Q[countries[#{id}].attr("fill", "#000");\n countries[#{id}].attr("stroke", "#f00");\n countries[#{id}].attr("stroke-width", "20");\n]
-  end
-
-  def unhighlight
-    %Q[countries[#{id}].attr("fill", "#000");\n countries[#{id}].attr("stroke", "##{game_player.colour.hex}");\n countries[#{id}].attr("stroke-width", "20").attr("id", "#{id}");\n]
-  end
-
-
   def attack(target, attacker_dice = 1, target_dice = 1)
     strengths = battle_strengths(attacker_dice, target)
     logger.info "battle_strengths [#{strengths}]"

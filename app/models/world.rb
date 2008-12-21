@@ -30,18 +30,6 @@ class World < ActiveRecord::Base
     #TODO award_bonuses game_player
   end
 
-  def to_js
-    text = %Q[function draw_map() {paper = Raphael("holder", 1150, 600);\n]
-    #countries.collect { |c| c.neighbours }.flatten.each_with_index do |n,i|
-    #  text << n.to_js(i)
-    #end
-    countries.each_with_index do |c, i|
-      text << c.to_js
-    end
-    text << '}'
-    text
-  end
-
   def generate_regions(options = {}, country_options = {})
     options[:min] ||= 2
     options[:max] ||= 4
@@ -59,6 +47,10 @@ class World < ActiveRecord::Base
     to_dot
     out = File.join(RAILS_ROOT, 'public/images', id.to_s) + '.svg'
     `dot -Tsvg -Gsize=800,600 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
+  end
+
+  def borders
+    regions.collect { |r| r.borders }.flatten
   end
 
   protected

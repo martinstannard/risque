@@ -13,11 +13,62 @@ function Map(target) {
   // Target div
   this.target = target;
 
-  // save the players so we can draw the countries with the correct colours
+  // Save the players so we can draw the countries with the correct colours
   this.players = {};
 
   // countries
   this.countries = {};
+
+  // borders
+  this.borders = {};
+
+  // setup the players so we can use the colours when we draw the map and connectors
+  this.setPlayers = function(players) {
+    for (var i = 0, ii = players.length; i < ii; i++) {
+      this.players[players[i].game_player.id] = players[i].game_player;
+    }
+  };
+
+  // draw one country on the map
+  this.drawCountry = function(country_json) {
+    var country = country_json.country;
+    var country_id = country.id;
+    $("g:contains('"+country.name+"')").remove();
+    var colour = this.players[country.game_player_id].colour.hex;
+    var y = Math.round(country.y_position),
+        x = Math.round(country.x_position);
+    var radius = this.settings.countryRadius + this.settings.countryIncRadius * country.armies;
+    this.countries[country_id] = country;
+    var group = this.map.group();
+    group.circle(x, y, radius).attr({fill:'#'+colour, stroke: "#fff", strokewidth: 2});
+    group.text(x, y+radius+10, country.name + ' (' + country.armies + ')').attr(this.hoverLabelStyle).show();
+  };
+
+  // Draw all the countries
+  this.drawCountries = function(countries) {
+    for (var i = 0, ii = countries.length; i < ii; i++) {
+      this.drawCountry(countries[i]);
+    }
+  };
+
+  // draw one border on the map
+  this.drawBorder = function(border_json) {
+    var border = border_json.neighbour;
+    var from = this.countries[border.country_id];
+    var to = this.countries[border.neighbour_id];
+    //$("g:contains('"+border.name+"')").remove();
+    //var colour = this.players[border.game_player_id].colour.hex;
+    this.borders[border.id] = border;
+    var group = this.map.group();
+    group.path({stroke: "#ddd"}).moveTo(from.x_position, from.y_position).lineTo(to.x_position, to.y_position);
+  };
+
+  // Draw all the borders
+  this.drawBorders = function(borders) {
+    for (var i = 0, ii = borders.length; i < ii; i++) {
+      this.drawBorder(borders[i]);
+    }
+  };
 
   this.settings = $.extend({
       // Dimensions
@@ -56,37 +107,6 @@ function Map(target) {
     mysteryFactor: 0
   }, (arguments[3] || {}) );
 
-
-  this.map = Raphael(target, this.settings.width, this.settings.height);
-
-  // setup the players so we can use the colours when we draw the map and connectors
-  this.setPlayers = function(players) {
-    for (var i = 0, ii = players.length; i < ii; i++) {
-      this.players[players[i].game_player.id] = players[i].game_player;
-    }
-  };
-
-  // plot one country on the map
-  this.plotCountry = function(country_json) {
-    var country = country_json.country;
-    var country_id = country.id;
-    $("g:contains('"+country.name+"')").remove();
-    var colour = this.players[country.game_player_id].colour.colour.hex;
-    var y = Math.round(this.settings.height - this.settings.bottomGutter - country.y_position),
-        x = Math.round(this.settings.leftGutter + country.x_position);
-    var radius = this.settings.countryRadius + this.settings.countryIncRadius * country.armies;
-    this.countries[country_id] = this.map.group();
-    var group = this.countries[country_id];
-    group.circle(x, y, radius).attr({fill:'#'+colour, stroke: "#fff", strokewidth: 2});
-    group.text(x, y+radius+10, country.name + ' (' + country.armies + ')').attr(this.hoverLabelStyle).show();
-  };
-
-  // Plot all the countries
-  this.plot = function(countries) {
-    for (var i = 0, ii = countries.length; i < ii; i++) {
-      this.plotCountry(countries[i]);
-    }
-  };
 
   this.setStyleDefaults = function() {
     // X and Y axis labels and captions default to global style if not provided
@@ -171,6 +191,7 @@ function Map(target) {
     }
   };
 
+  this.map = Raphael(target, this.settings.width, this.settings.height);
   this.setStyleDefaults();
   this.setPenColor();
 }

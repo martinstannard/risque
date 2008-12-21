@@ -2,7 +2,7 @@ function allocate_armies(game_id,game_player_id) {
   $.post("/games/allocate_armies",{game_id: game_id, game_player_id: game_player_id, country_id: $('#country_id').val(), armies: $('#armies').val(),authenticity_token: global_token}, function(data) {
       $("#out").html(data);
       });
-  plot_map();
+  draw_country($('#country_id').val());
 }
 
 function pass_turn(game_id,game_player_id) {
@@ -21,8 +21,8 @@ function attack(game_id,game_player_id,attacker_country_id, target_country_id,ar
   $.post("/games/attack",{game_id: game_id, game_player_id: game_player_id, attacker_country_id: attacker_country_id, target_country_id: target_country_id, armies: armies,authenticity_token: global_token}, function(data) {
       $("#out").html(data);
       });
-  plot_country(attacker_country_id);
-  plot_country(target_country_id);
+  draw_country(attacker_country_id);
+  draw_country(target_country_id);
 }
 
 function draw_svg (game_id) {
@@ -31,12 +31,25 @@ function draw_svg (game_id) {
 
 var map;
 
-function plot_country(country_id) {
-  $.getJSON("/countries/" + country_id, function(data) { map.plotCountry(data)} );
+// draw one country on the map
+function draw_country(country_id) {
+  $.getJSON("/countries/" + country_id, function(data) { map.drawCountry(data)} );
 }
 
-function plot_map() {
-  $.getJSON("/games/" + game_id + "/countries", function(data) { map.plot(data)} );
+// draw all the countries
+function draw_map() {
+  draw_countries();
+  draw_borders();
+}
+
+// draw all the countries
+function draw_borders() {
+  $.getJSON("/borders/" + game_id, function(data) { map.drawBorders(data)} );
+}
+
+// draw all the countries
+function draw_countries() {
+  $.getJSON("/games/" + game_id + "/countries", function(data) { map.drawCountries(data)} );
 }
 
 function set_players() {
@@ -47,6 +60,6 @@ $(document).ready(function() {
 
     map = new Map("map_holder");
     set_players();
-    plot_map();
+    draw_map();
 
 });

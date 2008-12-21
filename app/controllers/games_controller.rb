@@ -130,6 +130,15 @@ class GamesController < ApplicationController
     end
   end
 
+  def borders
+    world = Game.find(params[:id]).world
+    respond_to do |format|
+      format.js do
+        render :json => world.borders.to_json
+      end
+    end
+  end
+
   def players
     game = Game.find(params[:id])
     respond_to do |format|
