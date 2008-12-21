@@ -4,8 +4,9 @@
     %meta{:content => "text/html; charset=utf-8", "http-equiv" => "Content-Type"}
     %meta{:content => "IE=EmulateIE7", "http-equiv" => "X-UA-Compatible"}
     %title Risque
-    = javascript_include_tag 'jquery-1.2.6', 'jquery.svg.pack', 'raphael', :cache => true
+    = javascript_include_tag 'jquery-1.2.6', 'jquery.svg.pack', 'raphael'#, :cache => true
     = javascript_include_tag 'risk'
+    = javascript_include_tag 'map'
     %script
       = "var global_token = '" + form_authenticity_token + "';"
     = stylesheet_link_tag 'reset', 'risk'

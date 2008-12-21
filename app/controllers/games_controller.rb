@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+
   def new
     @game = Game.new
   end
@@ -118,6 +119,24 @@ class GamesController < ApplicationController
       page.replace_html 'svgholder', :partial => 'svg'
     end
 
+  end
+
+  def countries
+    world = Game.find(params[:id]).world
+    respond_to do |format|
+      format.js do
+        render :json => world.countries.to_json
+      end
+    end
+  end
+
+  def players
+    game = Game.find(params[:id])
+    respond_to do |format|
+      format.js do
+        render :json => game.game_players.to_json(:include => :colour)
+      end
+    end
   end
 
 end

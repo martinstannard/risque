@@ -58,7 +58,7 @@ class World < ActiveRecord::Base
   def to_svg
     to_dot
     out = File.join(RAILS_ROOT, 'public/images', id.to_s) + '.svg'
-    `dot -Tsvg -Gsize=1100,550 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
+    `dot -Tsvg -Gsize=800,600 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
   end
 
   protected
@@ -70,7 +70,7 @@ class World < ActiveRecord::Base
   def set_coordinates
     to_dot
     out = File.join(RAILS_ROOT, 'tmp', id.to_s) + '.txt'
-    `dot -Tplain -Gsize=1200,600 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
+    `dot -Tplain -Gsize=800,600 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
     i  = 0
     max_x = max_y = 0.0
     File.open(out).each do |line|
@@ -80,8 +80,8 @@ class World < ActiveRecord::Base
           max_y = $3.to_f if $3.to_f > max_y
         end
     end
-    scaling_x = 1000.0 / max_x
-    scaling_y = 550.0 / max_y
+    scaling_x = 800.0 / max_x
+    scaling_y = 600.0 / max_y
     logger.info scaling_x,scaling_y
     File.open(out).each do |line|
       line =~ /node (\d+)  (\d+\.\d+) (\d+\.\d+)/

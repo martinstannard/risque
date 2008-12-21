@@ -4,6 +4,7 @@
   $.post("/games/game/" + game_id,function(data) {
   $("#out").html(data);
   })
-#holder
-%script
-  = @game.world.to_js
+/#holder
+#map_holder
+/%script
+/  = @game.world.to_js
