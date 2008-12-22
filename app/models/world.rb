@@ -62,7 +62,7 @@ class World < ActiveRecord::Base
   def set_coordinates
     to_dot
     out = File.join(RAILS_ROOT, 'tmp', id.to_s) + '.txt'
-    `dot -Tplain -Gsize=800,600 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
+    `dot -Tplain -Gsize=1000,600 -o#{out} #{File.join(RAILS_ROOT, 'tmp', id.to_s)}.dot` unless RAILS_ENV == 'testing'
     i  = 0
     max_x = max_y = 0.0
     File.open(out).each do |line|

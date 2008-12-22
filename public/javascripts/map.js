@@ -29,27 +29,19 @@ function Map(target) {
     }
   };
 
-  // draw one country on the map
-  this.drawCountry = function(country_json) {
-    var country = country_json.country;
-    var country_id = country.id;
-    $("g:contains('"+country.name+"')").remove();
-    var colour = this.players[country.game_player_id].colour.hex;
-    var y = Math.round(country.y_position),
-        x = Math.round(country.x_position);
-    var radius = this.settings.countryRadius + this.settings.countryIncRadius * country.armies;
-    this.countries[country_id] = country;
-    var group = this.map.group();
-    group.circle(x, y, radius).attr({fill:'#'+colour, stroke: "#fff", strokewidth: 2});
-    group.text(x, y+radius+10, country.name + ' (' + country.armies + ')').attr(this.hoverLabelStyle).show();
-  };
 
-  // Draw all the countries
-  this.drawCountries = function(countries) {
-    for (var i = 0, ii = countries.length; i < ii; i++) {
-      this.drawCountry(countries[i]);
+  this.borderColour = function(from, to) {
+    var from_player = from.game_player_id;
+    var to_player = to.game_player_id;
+    var colour;
+    if (from_player == to_player) {
+      colour = this.players[from_player].colour.colour.hex;
     }
-  };
+    else {
+      colour = 'ddd';
+    }
+    return colour;
+  }
 
   // draw one border on the map
   this.drawBorder = function(border_json) {
@@ -60,7 +52,9 @@ function Map(target) {
     //var colour = this.players[border.game_player_id].colour.hex;
     this.borders[border.id] = border;
     var group = this.map.group();
-    group.path({stroke: "#ddd"}).moveTo(from.x_position, from.y_position).lineTo(to.x_position, to.y_position);
+    var colour = this.borderColour(from, to);
+    group.path({stroke: "#"+colour, opacity: 0.25, "stroke-width": "2px"}).moveTo(from.x_position, from.y_position).lineTo(to.x_position, to.y_position);
+    this.borders[border.id+'group'] = group;
   };
 
   // Draw all the borders
@@ -70,8 +64,29 @@ function Map(target) {
     }
   };
 
+  // draw one country on the map
+  this.drawCountry = function(country_json) {
+    var country = country_json.country;
+    var country_id = country.id;
+    $("g:contains('"+country.name+"')").remove();
+    var colour = this.players[country.game_player_id].colour.colour.hex;
+    var y = Math.round(country.y_position),
+        x = Math.round(country.x_position);
+    var radius = this.settings.countryRadius + this.settings.countryIncRadius * country.armies;
+    this.countries[country_id] = country;
+    var group = this.map.group();
+    group.circle(x, y, radius).attr({fill:'#'+colour, stroke: "#fff", "stroke-width": "4px", opacity: 0.7});
+    group.text(x, y+radius+10, country.name + ' (' + country.armies + ')').attr(this.labelStyle).show();
+  };
+
+  // Draw all the countries
+  this.drawCountries = function(countries) {
+    for (var i = 0, ii = countries.length; i < ii; i++) {
+      this.drawCountry(countries[i]);
+    }
+  };
   this.settings = $.extend({
-      // Dimensions
+    // Dimensions
     width: 1000,
     height: 600,
     leftGutter: 30,
@@ -109,73 +124,12 @@ function Map(target) {
 
 
   this.setStyleDefaults = function() {
-    // X and Y axis labels and captions default to global style if not provided
-    // - X Axis Labels
-    if (!this.settings.xAxisLabelColor) {
-    this.settings.xAxisLabelColor = this.settings.labelColor;
-    }
-    if (!this.settings.xAxisLabelFont) {
-    this.settings.xAxisLabelFont = this.settings.labelFont;
-    }
-    if (!this.settings.xAxisLabelFontSize) {
-    this.settings.xAxisLabelFontSize = this.settings.labelFontSize;
-    }
-    // - Y Axis Labels
-    if (!this.settings.yAxisLabelColor) {
-      this.settings.yAxisLabelColor = this.settings.labelColor;
-    }
-    if (!this.settings.yAxisLabelFont) {
-      this.settings.yAxisLabelFont = this.settings.labelFont;
-    }
-    if (!this.settings.yAxisLabelFontSize) {
-      this.settings.yAxisLabelFontSize = this.settings.labelFontSize;
-    }
-    // - Y Axis Caption
-    if (!this.settings.yAxisCaptionColor) {
-      this.settings.yAxisCaptionColor = this.settings.labelColor;
-    }
-    if (!this.settings.yAxisCaptionFont) {
-      this.settings.yAxisCaptionFont = this.settings.labelFont;
-    }
-    if (!this.settings.yAxisCaptionFontSize) {
-      this.settings.yAxisCaptionFontSize = this.settings.labelFontSize;
-    }
-    // - Hover Labels - Labels from the X Axis that appear when hovering over points in the graph
-    if (!this.settings.hoverLabelColor) {
-      this.settings.hoverLabelColor = this.settings.labelColor;
-    }
-    if (!this.settings.hoverLabelFont) {
-      this.settings.hoverLabelFont = this.settings.labelFont;
-    }
-    if (!this.settings.hoverLabelFontSize) {
-      this.settings.hoverLabelFontSize = this.settings.labelFontSize;
-    }
-    // - Hover Values - Values from the Y Axis that appear when hovering over points in the graph
-    if (!this.settings.hoverValueColor) {
-      this.settings.hoverValueColor = this.settings.labelColor;
-    }
-    if (!this.settings.hoverValueFont) {
-      this.settings.hoverValueFont = this.settings.labelFont;
-    }
-    if (!this.settings.hoverValueFontSize) {
-      this.settings.hoverValueFontSize = this.settings.labelFontSize;
-    }
     // Label Styles
     // - General
     this.labelStyle = {
       font: this.settings.labelFontSize + '"' + this.settings.labelFont + '"', 
       fill: this.settings.labelColor
     };
-    // - Hover Labels
-    this.hoverLabelStyle = {
-      font: this.settings.hoverLabelFontSize + '"' + this.settings.hoverLabelFont + '"', 
-      fill: this.settings.hoverLabelColor
-    };
-    // - Hover Values
-    this.hoverValueStyle = {
-      font: this.settings.hoverValueFontSize + '"' + this.settings.hoverValueFont + '"', 
-      fill: this.settings.hoverValueColor
-    };    
     // - Countries
     this.countryCircleStyle = {
       stroke: this.settings.countryCircleStroke, 
