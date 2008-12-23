@@ -33,13 +33,18 @@ var map;
 
 // draw one country on the map
 function draw_country(country_id) {
-  $.getJSON("/countries/" + country_id, function(data) { map.drawCountry(data)} );
+  $.getJSON("/countries/" + country_id, function(data) { map.createAndDrawCountry(data)} );
+}
+
+// draw all the countries
+function initialise() {
+  $.getJSON("/games/" + game_id + "/countries", function(data) { map.createCountries(data)} );
 }
 
 // draw all the countries
 function draw_map() {
   draw_countries();
-  draw_borders();
+//  draw_borders();
 }
 
 // draw all the countries
@@ -49,7 +54,7 @@ function draw_borders() {
 
 // draw all the countries
 function draw_countries() {
-  $.getJSON("/games/" + game_id + "/countries", function(data) { map.drawCountries(data)} );
+  map.drawCountries();
 }
 
 function set_players() {
@@ -60,6 +65,6 @@ $(document).ready(function() {
 
     map = new Map("map_holder");
     set_players();
-    draw_map();
+    initialise();
 
 });

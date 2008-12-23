@@ -7,8 +7,6 @@
  *
  * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
  */
-
-
 function Map(target) {
   // Target div
   this.target = target;
@@ -29,6 +27,58 @@ function Map(target) {
     }
   };
 
+  var Country = function Country(country, colour, map) {
+    var name = country.name;
+    var map = map;
+    var x = country.x_position;
+    var y = country.y_position;
+    var armies = country.armies;
+    var radius = 5 + 3 * armies;
+    var colour = colour;
+    var dx = 0, dy = 0;
+    var links = [];
+    var group = null; 
+    var font = {"font-size": "9px", "font-family": "Arial", fill: "#fff"};
+    var obj = {
+      name: name,
+      x: function () {
+        return x;
+      },
+      y: function () {
+        return y;
+      },
+      linkTo: function (other) {
+        if (other === this) return;
+        var line = r.path({stroke: "#aaa"}).moveTo(this.x(), this.y()).lineTo(other.x(), other.y());
+        line[0].parentNode.insertBefore(line[0], line[0].parentNode.firstChild); // move to back
+        var link = {
+          start: this,
+          end: other,
+          line: line
+        };
+        links.push(link);
+        other.linkFrom(link);
+      },
+      unlink: function (link) {
+        if (this === link.start) {
+          if (links.indexOf(link) >= 0) {
+            links.remove(link);
+          }
+          link.end.unlink(link);
+          $(link.line[0]).remove();
+        } 
+      },
+      remove: function () {
+        group.node.remove();
+      },
+      draw: function () {
+        group = map.group();
+        group.circle(x, y, radius).attr({fill:'#'+colour, stroke: "#fff", "stroke-width": "2px", opacity: 0.7});
+        group.text(x, y+radius+10, name + ' (' + armies + ')').attr(font).show();
+      }
+    };
+    return obj;
+  };
 
   this.borderColour = function(from, to) {
     var from_player = from.game_player_id;
@@ -41,7 +91,7 @@ function Map(target) {
       colour = 'ddd';
     }
     return colour;
-  }
+  };
 
   // draw one border on the map
   this.drawBorder = function(border_json) {
@@ -64,36 +114,51 @@ function Map(target) {
     }
   };
 
+  // replace and draw country on map
+  this.createAndDrawCountry = function(json) {
+    var country = json.country;
+    this.countries[country.id].remove();
+    delete this.countries[country.id];
+    var colour = this.players[country.game_player_id].colour.colour.hex;
+    this.countries[country.id] = new Country(countries[i], colour, this.map);
+    this.countries[country.id].draw();
+  }
+
+
   // draw one country on the map
   this.drawCountry = function(country_json) {
-    var country = country_json.country;
-    var country_id = country.id;
-    $("g:contains('"+country.name+"')").remove();
-    var colour = this.players[country.game_player_id].colour.colour.hex;
-    var y = Math.round(country.y_position),
-        x = Math.round(country.x_position);
-    var radius = this.settings.countryRadius + this.settings.countryIncRadius * country.armies;
-    this.countries[country_id] = country;
-    var group = this.map.group();
-    group.circle(x, y, radius).attr({fill:'#'+colour, stroke: "#fff", "stroke-width": "4px", opacity: 0.7});
-    group.text(x, y+radius+10, country.name + ' (' + country.armies + ')').attr(this.labelStyle).show();
+    this.countries[country_json.country.id].draw();
   };
 
   // Draw all the countries
-  this.drawCountries = function(countries) {
-    for (var i = 0, ii = countries.length; i < ii; i++) {
-      this.drawCountry(countries[i]);
+  this.drawCountries = function() {
+    for (i in this.countries) {
+      this.countries[i].draw();
     }
   };
+
+  this.createCountry = function(country) {
+    var colour = this.players[country.game_player_id].colour.colour.hex;
+    this.countries[country.id] = new Country(country, colour, this.map);
+  }
+
+  this.createCountries = function(countries) {
+    for (i in countries) {
+      var country = countries[i].country;
+      this.createCountry(country);
+    }
+    this.drawCountries();
+  };
+
   this.settings = $.extend({
     // Dimensions
     width: 1000,
-    height: 600,
+    height: 700,
     leftGutter: 30,
     bottomGutter: 20,
     topGutter: 20,
     // Label Style
-    labelColor: "#fff",
+    labelColor: "#f00",
     labelFont: "Arial",
     labelFontSize: "9px",
     // Grid Style
@@ -150,3 +215,74 @@ function Map(target) {
   this.setPenColor();
 }
 
+/*
+jQuery(function ($) {
+  var r = new Raphael(document.getElementById("map_holder"), 800, 600);
+  var components = [];
+  var countries = {};
+  var borders = {};
+
+  var Country = function Country(name) {
+    var x = 0;
+    var y = 0;
+    var armies = 48;
+    var colour = "ffffff";
+    var dx = 0, dy = 0;
+    var links = [];
+    var obj = {
+      name: name,
+      x: function () {
+        return x;
+      },
+      y: function () {
+        return y;
+      },
+      moveTo: function (nx, ny) {
+        x = nx;
+        y = ny;
+        for (var l = 0; l<links.length; l++) {
+          links[l].line[0].pathSegList.getItem(0).x = this.cx();
+          links[l].line[0].pathSegList.getItem(0).y = this.cy();
+        }
+        for (var l = 0; l<incomingLinks.length; l++) {
+          incomingLinks[l].line[0].pathSegList.getItem(1).x = this.cx();
+          incomingLinks[l].line[0].pathSegList.getItem(1).y = this.cy();
+        }
+      },
+      linkTo: function (other) {
+        if (other === this) return;
+        var line = r.path({stroke: "#aaa"}).moveTo(this.x(), this.y()).lineTo(other.x(), other.y());
+        line[0].parentNode.insertBefore(line[0], line[0].parentNode.firstChild); // move to back
+        var link = {
+          start: this,
+          end: other,
+          line: line
+        };
+        links.push(link);
+        other.linkFrom(link);
+      },
+      unlink: function (link) {
+        if (this === link.start) {
+          if (links.indexOf(link) >= 0) {
+            links.remove(link);
+          }
+          link.end.unlink(link);
+          $(link.line[0]).remove();
+        } 
+      },
+      remove: function () {
+        while (links.length > 0) {
+          links[0].start.unlink(links[0]);
+        }
+        components.remove(this);
+        delete countries[username];
+      },
+      update: function () {
+      },
+      draw: function () {}
+    };
+    return obj;
+  };
+
+};
+*/
